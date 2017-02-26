@@ -82,12 +82,12 @@ namespace Assets.Scripts
             return String.Format("({0},{1})", X, Y);
         }
 
-        internal float Sign(Vector2D toTarget)
+        public float Sign(Vector2D toTarget)
         {
             return Y * toTarget.X > X * toTarget.Y ? -1 : 1;
         }
 
-        internal float Dot(Vector2D toTarget)
+        public float Dot(Vector2D toTarget)
         {
             return X * toTarget.X + Y * toTarget.Y;
         }

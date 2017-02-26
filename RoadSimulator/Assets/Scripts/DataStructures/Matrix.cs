@@ -63,6 +63,16 @@ namespace Assets.Scripts.DataStructures
             return rm;
         }
 
+
+        //create a rotation matrix from a 2D vector
+        public static Matrix Rotate(Vector2D fwd, Vector2D side)
+        {
+            return new Matrix(fwd.X, fwd.Y, 0,
+                                             side.X, side.Y, 0,
+                                             0, 0, 1);
+        }
+
+
         public static float GetRad(float degrees)
         {
             return (float)Math.PI / (180 / degrees);

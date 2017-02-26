@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\FleeBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ISteeringBehavior.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\ObstacleAvoidanceBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SteeringBehaviour.cs" />
     <Compile Include="Assets\Scripts\Vector2D.cs" />

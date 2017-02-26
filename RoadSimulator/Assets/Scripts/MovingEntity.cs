@@ -16,15 +16,30 @@ namespace Assets.Scripts
         public float MaxTurnRate { get; set; }
         public Vector2D Heading { get; set; }
         public Vector2D Side { get; set; }
-
         public ISteeringBehavior SB { get; set; }
+        public bool Tagged { get; internal set; }
+        public int BRadius { get; set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size,  World w) : base(gameObject, pos, size, w)
         {
             Mass = 30;
             MaxSpeed = 150;
+            BRadius = 45;
             MaxTurnRate = 9999999999999;
-            Velocity = new Vector2D();
+
+            if (Velocity == null)
+                Velocity = new Vector2D();
+
+            if (Side == null)
+                Side = new Vector2D();
+
+            if (Pos == null)
+                Pos = new Vector2D();
+
+            if (Heading == null)
+                Heading = new Vector2D();
+
+            Tagged = true;
         }
 
         public override void Update(float timeElapsed)
@@ -86,6 +101,11 @@ namespace Assets.Scripts
 
             //finally recreate m_vSide
             Side = Heading.Perp();
+        }
+
+        public float Speed()
+        {
+            return Velocity.Length();
         }
 
         public override string ToString()

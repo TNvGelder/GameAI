@@ -8,3 +8,13 @@ C:\Projects\GameAIProject\RoadSimulatorTests\bin\Debug\UnityEngine.xml
 C:\Projects\GameAIProject\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.csprojResolveAssemblyReference.cache
 C:\Projects\GameAIProject\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.dll
 C:\Projects\GameAIProject\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.pdb
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\RoadSimulatorTests.dll
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\RoadSimulatorTests.pdb
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\Assembly-CSharp.dll
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\UnityEngine.dll
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\Assembly-CSharp.pdb
+C:\Development\GameAI\RoadSimulatorTests\bin\Debug\UnityEngine.xml
+C:\Development\GameAI\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.csprojResolveAssemblyReference.cache
+C:\Development\GameAI\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.dll
+C:\Development\GameAI\RoadSimulatorTests\obj\Debug\RoadSimulatorTests.pdb

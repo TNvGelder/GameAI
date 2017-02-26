@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
-    private List<MovingEntity> entities = new List<MovingEntity>();
-    private List<Car> cars = new List<Car>();
+    public List<MovingEntity> entities = new List<MovingEntity>();
+    public List<Car> cars = new List<Car>();
     public List<GameObject> CarObjects;
     public float Width { get; set; }
     public float Height { get; set; }
+    public int MinDetectionBoxLength { get; internal set; }
+
     public Car Target;
 
     // Use this for initialization
@@ -19,6 +21,8 @@ public class World : MonoBehaviour {
         //Makes it so that the worldsize is the size of the camera
         Height = cam.orthographicSize;
         Width = Height * Screen.width / Screen.height;
+        MinDetectionBoxLength = 40;
+
         GameObject carGameObjects = GameObject.Find("Cars");
         foreach(Transform child in carGameObjects.transform)//Gets direct children of cars
         {
@@ -35,7 +39,8 @@ public class World : MonoBehaviour {
         if (cars.Count > 1)
         {
             Target = cars[0];
-            Target.SB = new FleeBehaviour(Target, cars[1]);
+            //Target.SB = new FleeBehaviour(Target, cars[1]);
+            Target.SB = new ObstacleAvoidanceBehavior(Target);
             for (int i = 1; i < cars.Count; i++)
             {
                 Car car = cars[i];
