@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadSimulator", "RoadSimulator.csproj", "{E3D91A97-B4FD-CF65-A30C-4AD43342E6A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoadSimulatorTests", "..\RoadSimulatorTests\RoadSimulatorTests.csproj", "{981D73FC-09FA-438D-8FFC-5775652D98CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,10 @@ Global
 		{E3D91A97-B4FD-CF65-A30C-4AD43342E6A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3D91A97-B4FD-CF65-A30C-4AD43342E6A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3D91A97-B4FD-CF65-A30C-4AD43342E6A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{981D73FC-09FA-438D-8FFC-5775652D98CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{981D73FC-09FA-438D-8FFC-5775652D98CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{981D73FC-09FA-438D-8FFC-5775652D98CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{981D73FC-09FA-438D-8FFC-5775652D98CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
