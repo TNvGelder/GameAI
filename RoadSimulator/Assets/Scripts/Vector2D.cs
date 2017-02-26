@@ -8,14 +8,14 @@ namespace Assets.Scripts
 {
     public class Vector2D
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public Vector2D() : this(0, 0)
         {
         }
 
-        public Vector2D(double x, double y)
+        public Vector2D(float x, float y)
         {
             X = x;
             Y = y;
@@ -27,12 +27,12 @@ namespace Assets.Scripts
             Y = unityVector.y;
         }
 
-        public double Length()
+        public float Length()
         {
-            return Math.Sqrt(LengthSquared());
+            return (float)Math.Sqrt(LengthSquared());
         }
 
-        public double LengthSquared()
+        public float LengthSquared()
         {
             return (this.X * this.X) + (this.Y * this.Y);
         }
@@ -47,12 +47,12 @@ namespace Assets.Scripts
             return new Vector2D(a.X - b.X, a.Y - b.Y);
         }
 
-        public static Vector2D operator *(Vector2D a, double b)
+        public static Vector2D operator *(Vector2D a, float b)
         {
             return new Vector2D(a.X * b, a.Y * b);
         }
 
-        public static Vector2D operator /(Vector2D a, double b)
+        public static Vector2D operator /(Vector2D a, float b)
         {
             return new Vector2D(b != 0 ? a.X / b : a.X, b != 0 ? a.Y / b : a.Y);
         }
@@ -62,7 +62,7 @@ namespace Assets.Scripts
             return this / Length();
         }
 
-        public Vector2D Truncate(double maX)
+        public Vector2D Truncate(float maX)
         {
             if (Length() > maX)
             {
@@ -80,6 +80,26 @@ namespace Assets.Scripts
         public override string ToString()
         {
             return String.Format("({0},{1})", X, Y);
+        }
+
+        internal float Sign(Vector2D toTarget)
+        {
+            return Y * toTarget.X > X * toTarget.Y ? -1 : 1;
+        }
+
+        internal float Dot(Vector2D toTarget)
+        {
+            return X * toTarget.X + Y * toTarget.Y;
+        }
+
+        public Vector2 ToVector2()
+        {
+            return new Vector2((float)X, (float)Y);
+        }
+
+        public Vector2D Perp()
+        {
+            return new Vector2D(-Y, X);
         }
     }
 }
