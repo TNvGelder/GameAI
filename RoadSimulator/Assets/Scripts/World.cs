@@ -35,16 +35,17 @@ public class World : MonoBehaviour {
             Car car = new Car(obj, pos, size, this);
             cars.Add(car);
             entities.Add(car);
+            car.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(car));
         }
         if (cars.Count > 1)
         {
             Target = cars[0];
-            //Target.SB = new FleeBehaviour(Target, cars[1]);
-            Target.SB = new ObstacleAvoidanceBehavior(Target);
+            Target.SteeringBehaviours.Add(new FleeBehaviour(Target, cars[1]));
+            
             for (int i = 1; i < cars.Count; i++)
             {
                 Car car = cars[i];
-                car.SB = new SeekBehaviour(car, Target);
+                car.SteeringBehaviours.Add( new SeekBehaviour(car, Target));
             }
         }
     }

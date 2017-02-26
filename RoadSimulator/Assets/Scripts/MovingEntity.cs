@@ -16,7 +16,8 @@ namespace Assets.Scripts
         public float MaxTurnRate { get; set; }
         public Vector2D Heading { get; set; }
         public Vector2D Side { get; set; }
-        public ISteeringBehavior SB { get; set; }
+        private List<ISteeringBehavior> steeringBehaviours;
+        public List<ISteeringBehavior> SteeringBehaviours { get { return steeringBehaviours; } }
         public bool Tagged { get; internal set; }
         public int BRadius { get; set; }
 
@@ -24,8 +25,9 @@ namespace Assets.Scripts
         {
             Mass = 30;
             MaxSpeed = 150;
-            BRadius = 45;
+            BRadius = 2;
             MaxTurnRate = 9999999999999;
+            steeringBehaviours = new List<ISteeringBehavior>();
 
             if (Velocity == null)
                 Velocity = new Vector2D();
@@ -44,12 +46,16 @@ namespace Assets.Scripts
 
         public override void Update(float timeElapsed)
         {
-            if (SB == null)
+            if (steeringBehaviours.Count == 0)
             {
                 return;
             }
 
-            Vector2D SteeringForce = SB.Calculate();
+            Vector2D SteeringForce = new Vector2D();
+            foreach(ISteeringBehavior behaviour in steeringBehaviours)
+            {
+                SteeringForce += behaviour.Calculate();
+            }
             //Acceleration = Force/Mass
             Vector2D acceleration = SteeringForce / Mass;
 
