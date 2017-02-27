@@ -3,6 +3,7 @@ using Assets.Scripts.SteeringBehaviours;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class World : MonoBehaviour {
 
@@ -41,16 +42,21 @@ public class World : MonoBehaviour {
         {
             Target = cars[0];
             Target.SteeringBehaviours.Add(new FleeBehaviour(Target, cars[1]));
-            
+
             for (int i = 1; i < cars.Count; i++)
             {
                 Car car = cars[i];
-                car.SteeringBehaviours.Add( new SeekBehaviour(car, Target));
+                car.SteeringBehaviours.Add(new SeekBehaviour(car, Target));
             }
         }
     }
 	
 	void FixedUpdate () {
+        if (Input.GetKeyDown("r"))
+        {
+            SceneManager.LoadScene(0);
+        }
+
         float timeElapsed = Time.fixedDeltaTime;
         foreach (MovingEntity me in entities)
         {

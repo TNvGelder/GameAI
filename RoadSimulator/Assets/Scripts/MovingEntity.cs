@@ -18,16 +18,18 @@ namespace Assets.Scripts
         public Vector2D Side { get; set; }
         private List<ISteeringBehavior> steeringBehaviours;
         public List<ISteeringBehavior> SteeringBehaviours { get { return steeringBehaviours; } }
+        public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
         public bool Tagged { get; internal set; }
         public int BRadius { get; set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size,  World w) : base(gameObject, pos, size, w)
         {
-            Mass = 30;
-            MaxSpeed = 150;
+            Mass = 1;
+            MaxSpeed = 10;
             BRadius = 2;
             MaxTurnRate = 9999999999999;
             steeringBehaviours = new List<ISteeringBehavior>();
+            CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
 
             if (Velocity == null)
                 Velocity = new Vector2D();
@@ -52,10 +54,9 @@ namespace Assets.Scripts
             }
 
             Vector2D SteeringForce = new Vector2D();
-            foreach(ISteeringBehavior behaviour in steeringBehaviours)
-            {
-                SteeringForce += behaviour.Calculate();
-            }
+
+            SteeringForce = CombinedSteeringBehavior.Calculate();
+
             //Acceleration = Force/Mass
             Vector2D acceleration = SteeringForce / Mass;
 

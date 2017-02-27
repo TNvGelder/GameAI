@@ -86,7 +86,9 @@
     <Compile Include="Assets\Scripts\DataStructures\PriorityQueue\BinaryHeap.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\CombinedSteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\FleeBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\ICombinedSteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ISteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ObstacleAvoidanceBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviour.cs" />

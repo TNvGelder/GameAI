@@ -9,7 +9,7 @@ namespace Assets.Scripts
     {
         public Car(GameObject obj, Vector2D pos, Vector2D size, World w) : base(obj, pos, size, w)
         {
-            MaxSpeed = 10;
+            MaxSpeed = 12;
         }
     }
 }
