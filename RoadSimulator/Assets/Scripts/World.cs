@@ -20,9 +20,9 @@ public class World : MonoBehaviour {
     void Start () {
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         //Makes it so that the worldsize is the size of the camera
-        Height = cam.orthographicSize;
+        Height = cam.orthographicSize *2;
         Width = Height * Screen.width / Screen.height;
-        MinDetectionBoxLength = 40;
+        MinDetectionBoxLength = 5;
 
         GameObject carGameObjects = GameObject.Find("Cars");
         foreach(Transform child in carGameObjects.transform)//Gets direct children of cars
@@ -31,9 +31,10 @@ public class World : MonoBehaviour {
             SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
             
             //Gets size of the sprite in units
-            Vector2D size = new Vector2D(spriteRenderer.bounds.size/ spriteRenderer.sprite.pixelsPerUnit);
+            Vector2D size = new Vector2D(spriteRenderer.bounds.size);
             Vector2D pos = new Vector2D(child.position);
             Car car = new Car(obj, pos, size, this);
+            car.BRadius = car.Size.Y;
             cars.Add(car);
             entities.Add(car);
             car.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(car));

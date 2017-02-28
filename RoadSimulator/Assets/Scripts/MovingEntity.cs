@@ -20,7 +20,7 @@ namespace Assets.Scripts
         public List<ISteeringBehavior> SteeringBehaviours { get { return steeringBehaviours; } }
         public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
         public bool Tagged { get; internal set; }
-        public int BRadius { get; set; }
+        public float BRadius { get; set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size,  World w) : base(gameObject, pos, size, w)
         {

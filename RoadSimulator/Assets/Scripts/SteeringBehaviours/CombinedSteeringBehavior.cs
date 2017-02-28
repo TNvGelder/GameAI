@@ -9,9 +9,9 @@ namespace Assets.Scripts.SteeringBehaviours
         private MovingEntity _entity;
         public Dictionary<Type, float> weights = new Dictionary<Type, float>()
         {
-            { typeof(ObstacleAvoidanceBehavior), 1f },
-            { typeof(FleeBehaviour), 0.3f },
-            { typeof(SeekBehaviour), 0.3f }
+            { typeof(ObstacleAvoidanceBehavior), 5f },
+            { typeof(FleeBehaviour), 1f },
+            { typeof(SeekBehaviour), 1f }
         };
 
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)
