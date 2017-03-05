@@ -11,7 +11,7 @@ namespace DataStructures.GraphStructure
     /// <typeparam name="T"></typeparam>
     public class Graph<T>
     {
-        private Dictionary<T, GraphNode<T>> _nodeDictionary = new Dictionary<T, GraphNode<T>>();
+        public Dictionary<T, GraphNode<T>> Nodes = new Dictionary<T, GraphNode<T>>();
 
         //Adds an edge between two nodes with the given cost.
         public void AddEdge(T start, T destination, double cost)
@@ -21,7 +21,11 @@ namespace DataStructures.GraphStructure
             startNode.Adjacent.Add(new Edge<T>(destNode, cost));
         }
 
-        
+        public void AddNode(T n)
+        {
+            getNode(n);
+        }
+
         /// <summary>
         /// Algorithm to find the shortest weighted path in a graph. (Shortest distance)
         /// This method uses a startvalue as well as an end value that need to be given.
@@ -34,20 +38,20 @@ namespace DataStructures.GraphStructure
             
             BinaryHeap<Edge<T>> priorityQueue = new BinaryHeap<Edge<T>>();
 
-            if (!_nodeDictionary.ContainsKey(startValue) || !_nodeDictionary.ContainsKey(endValue))
+            if (!Nodes.ContainsKey(startValue) || !Nodes.ContainsKey(endValue))
             {
                 throw new Exception();
             }
-            foreach (GraphNode<T> node in _nodeDictionary.Values)
+            foreach (GraphNode<T> node in Nodes.Values)
             {
                 node.Reset();
             }
             
-            GraphNode<T> start = _nodeDictionary[startValue];
+            GraphNode<T> start = Nodes[startValue];
             priorityQueue.Add(new Edge<T>(start, 0));
             start.Distance = 0;
             int nodesSeen = 0;
-            while (!priorityQueue.IsEmpty && nodesSeen < _nodeDictionary.Count)
+            while (!priorityQueue.IsEmpty && nodesSeen < Nodes.Count)
             {
                 Edge<T> minPath = priorityQueue.DeleteMin();
                 GraphNode<T> node = minPath.Destination;
@@ -80,7 +84,7 @@ namespace DataStructures.GraphStructure
 
         public bool ContainsValue(T value)
         {
-            return _nodeDictionary.ContainsKey(value);
+            return Nodes.ContainsKey(value);
         }
 
         //Returns all the values from the shortest path from the startValue to endValue. The linkedlist will start with the startValue.
@@ -106,14 +110,14 @@ namespace DataStructures.GraphStructure
         //Returns the node or creates the node if it does not exist.
         private GraphNode<T> getNode(T value)
         {
-            if (_nodeDictionary.ContainsKey(value))
+            if (Nodes.ContainsKey(value))
             {
-                return _nodeDictionary[value];
+                return Nodes[value];
             }
             else
             {
                 GraphNode<T> node = new GraphNode<T>(value);
-                _nodeDictionary[value] = node;
+                Nodes[value] = node;
                 return node;
             }
         }

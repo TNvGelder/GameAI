@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.2f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -78,10 +80,14 @@
     <Compile Include="Assets\Scripts\BaseGameEntity.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Edge.cs" />
+    <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GameNode.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Graph.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GraphNode.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Matrix.cs" />
     <Compile Include="Assets\Scripts\DataStructures\PriorityQueue\BinaryHeap.cs" />
+    <Compile Include="Assets\Scripts\GraphNodeGameObject.cs" />
+    <Compile Include="Assets\Scripts\Grid.cs" />
+    <Compile Include="Assets\Scripts\GridCell.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\CombinedSteeringBehavior.cs" />
