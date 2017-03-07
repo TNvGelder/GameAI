@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class Vector2D
+    public class Vector2D : IEquatable<Vector2D>
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -70,6 +70,18 @@ namespace Assets.Scripts
             }
 
             return this;
+        }
+
+        public bool Equals(Vector2D other)
+        {
+            return (X.Equals(other.X) && Y.Equals(other.Y));
+        }
+
+        public override int GetHashCode()
+        {
+            int result = (int) X;
+            result = 31 * result +  (int) Y;
+            return result;
         }
 
         public Vector2D Clone()

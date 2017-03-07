@@ -39,7 +39,7 @@ namespace DroneAPI.DataStructures.GraphStructure.Tests
         public void GetPathTestWithNoPossiblePath()
         {
             Graph<int> g = new Graph<int>();
-            g.AddEdge(3,4,3);
+            g.AddEdge(3, 4, 3);
             g.AddEdge(5, 6, 3);
             LinkedList<int> path = g.GetPath(3, 5);
             Assert.IsTrue(path.Count == 0);
@@ -54,7 +54,7 @@ namespace DroneAPI.DataStructures.GraphStructure.Tests
             g.AddEdge("B", "C", 1);
             g.AddEdge("C", "D", 3);
             g.AddEdge("B", "D", 7);
-            LinkedList<string> path = g.GetPath("A","D");
+            LinkedList<string> path = g.GetPath("A", "D");
             LinkedList<string> expected = new LinkedList<string>();
             expected.AddFirst("D");
             expected.AddFirst("C");
@@ -62,6 +62,7 @@ namespace DroneAPI.DataStructures.GraphStructure.Tests
             expected.AddFirst("A");
             Assert.IsTrue(path.SequenceEqual(expected));
         }
+        
 
     }
 }

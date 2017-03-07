@@ -110,6 +110,7 @@ namespace Assets.Scripts
             Side = Heading.Perp();
         }
 
+
         public float Speed()
         {
             return Velocity.Length();
