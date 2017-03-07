@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System;
 using DataStructures.GraphStructure;
 using Assets.Scripts.DataStructures.GraphStructure;
+using System.Linq;
 
 public class World : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public class World : MonoBehaviour {
 
     public Car Target;
 
+
+
     // Use this for initialization
     void Start () {
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -29,10 +32,8 @@ public class World : MonoBehaviour {
         Height = cam.orthographicSize *2;
         Width = Height * Screen.width / Screen.height;
         MinDetectionBoxLength = 5;
-
-        //SetupCars();
+        
         GenerateGraph();
-        GenerateGrid();
     }
 
     private void SetupCars()
@@ -65,84 +66,118 @@ public class World : MonoBehaviour {
         }
     }
 
-    private void GenerateGrid()
-    {
-        for (var y = 0; y < Screen.height; y += GridCell.Height)
-        {
-            for (var x = 0; x < Screen.width; x += GridCell.Width)
-            {
-                var cell = new GridCell();
-                cell.x = x;
-                cell.y = y;
-                cell.Type = GetCellType(cell);
-
-                Grid.Cells.Add(cell);
-            }
-        }
-    }
-
     private void GenerateGraph()
     {
-        var roads = GameObject.Find("Roads");
-        var shops = GameObject.Find("Shops");
+        var start = GameObject.FindGameObjectsWithTag("Roads")[0].transform;
 
-        foreach (Transform child in roads.transform)
-        {
-            graph.AddNode(new GameNode()
-            {
-                IsRoad = true,
-                x = child.position.x,
-                y = child.position.y
-            });
-        }
-
-        //foreach (Transform child in shops.transform)
-        //{
-        //    graph.AddNode(new GameNode()
-        //    {
-        //        IsShop = true,
-        //        x = child.position.x,
-        //        y = child.position.y
-        //    });
-        //}
+        find_adjacent_node(start.position.x, start.position.y);
     }
 
-    private void OnGUI()
+
+    float interval = 5.0f;
+    void find_adjacent_node(float x, float y)
     {
-        //RenderNodes();
-        
-        if (ShouldRenderGrid)
+        //if (x < -50 || x > 50) return;
+
+        if(!IsNode(x + interval, y) && IsRoad(x + interval, y))
         {
-            RenderGrid();
+            PlaceRoadNode(x + interval, y);
+            find_adjacent_node(x + interval, y);
+        }
+
+        if (!IsNode(x - interval, y) && IsRoad(x - interval, y))
+        {
+            PlaceRoadNode(x - interval, y);
+            find_adjacent_node(x - interval, y);
+        }
+
+
+        if (!IsNode(x, y + interval) && IsRoad(x, y + interval))
+        {
+            PlaceRoadNode(x, y + interval);
+            find_adjacent_node(x, y + interval);
+        }
+
+        if (!IsNode(x, y - interval) && IsRoad(x, y - interval))
+        {
+            PlaceRoadNode(x, y - interval);
+            find_adjacent_node(x, y - interval);
         }
     }
 
-    private void RenderGrid()
+    private bool IsNode(float x, float y)
     {
-        foreach (var cell in Grid.Cells)
-        {
-            cell.Render();
-        }
+        return graph.Nodes.Any(n => n.Key.x == x && n.Key.y == y);
     }
 
-    private GameObjectType GetCellType(GridCell cell)
+    private void PlaceRoadNode(float x, float y)
+    {
+        graph.AddNode(new GameNode()
+        {
+            IsRoad = true,
+            x = x,
+            y = y
+        });
+    }
+
+    bool IsRoad(float x, float y)
     {
         foreach (var child in GameObject.FindGameObjectsWithTag("Roads"))
         {
             Vector3[] array = SpriteLocalToWorld(child);
-            
-            var p1 = Camera.main.WorldToScreenPoint(array[0]);
-            var p2 = Camera.main.WorldToScreenPoint(array[1]);
 
-            if (p1.x <= cell.x && p2.x >= cell.x + 20 &&
-                p1.y <= cell.y && p2.y >= cell.y + 20)
+            //var x1 = child.transform.position.x;
+            //var y1 = child.transform.position.y;
+            //var x2 = 
+            //var p1 = Camera.main.WorldToScreenPoint(array[0]);
+            //var p2 = Camera.main.WorldToScreenPoint(array[1]);
+
+            if (array[0].x <= x && array[1].x >= x &&
+                array[0].y <= y && array[1].y >= y)
             {
-                return GameObjectType.Road;
+                return true;
             }
         }
 
-        return GameObjectType.Grass;
+        return false;
     }
+
+    private void OnGUI()
+    {
+        RenderNodes();
+
+        //if (ShouldRenderGrid)
+        //{
+        //    RenderGrid();
+        //}
+    }
+
+    //private void RenderGrid()
+    //{
+    //    foreach (var cell in Grid.Cells)
+    //    {
+    //        cell.Render();
+    //    }
+    //}
+
+    //private GameObjectType GetCellType(GridCell cell)
+    //{
+    //    foreach (var child in GameObject.FindGameObjectsWithTag("Roads"))
+    //    {
+    //        Vector3[] array = SpriteLocalToWorld(child);
+
+    //        var p1 = Camera.main.WorldToScreenPoint(array[0]);
+    //        var p2 = Camera.main.WorldToScreenPoint(array[1]);
+
+    //        if (p1.x <= cell.x && p2.x >= cell.x + 20 &&
+    //            p1.y <= cell.y && p2.y >= cell.y + 20)
+    //        {
+    //            return GameObjectType.Road;
+    //        }
+    //    }
+
+    //    return GameObjectType.Grass;
+    //}
 
     Vector3[] SpriteLocalToWorld(GameObject obj)
     {
@@ -155,6 +190,8 @@ public class World : MonoBehaviour {
         array[1] = pos + sp.bounds.max;
         return array;
     }
+
+
 
     private void RenderNodes()
     {
