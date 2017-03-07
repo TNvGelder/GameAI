@@ -20,6 +20,7 @@ public class World : MonoBehaviour {
     public int MinDetectionBoxLength { get; internal set; }
     Graph<GameNode> graph = new Graph<GameNode>();
     public bool ShouldRenderGrid = true;
+    public GUIStyle NodeGUIStyle = new GUIStyle();
 
     public Car Target;
 
@@ -33,6 +34,18 @@ public class World : MonoBehaviour {
         Width = Height * Screen.width / Screen.height;
         MinDetectionBoxLength = 5;
         
+        Texture2D tex = new Texture2D(2, 2);
+        for (int i = 0; i < tex.width; i++)
+        {
+            for (int j = 0; j < tex.height; j++)
+            {
+                tex.SetPixel(i, j, new Color(255, 255, 255));
+            }
+        }
+        tex.Apply();
+        NodeGUIStyle = new GUIStyle();
+        NodeGUIStyle.normal.background = tex;
+
         GenerateGraph();
     }
 
@@ -64,6 +77,7 @@ public class World : MonoBehaviour {
                 car.SteeringBehaviours.Add(new SeekBehaviour(car, Target));
             }
         }
+
     }
 
     private void GenerateGraph()
@@ -201,22 +215,9 @@ public class World : MonoBehaviour {
             var screenPos = Camera.main.WorldToScreenPoint(pos.ToVector2());
 
             var size = new Vector2D(15, 15);
-            var color = node.Key.IsRoad ? new Color(255, 255, 255) : new Color(255, 0, 0);
-
-            Texture2D tex = new Texture2D(2, 2);
-            for (int i = 0; i < tex.width; i++)
-            {
-                for (int j = 0; j < tex.height; j++)
-                {
-                    tex.SetPixel(i, j, color);
-                }
-            }
-            tex.Apply();
-            GUIStyle tempstyle = new GUIStyle();
-            tempstyle.normal.background = tex;
 
             var guiPosition = new Vector2(screenPos.x, Screen.height - screenPos.y);
-            GUILayout.BeginArea(new Rect(guiPosition, size.ToVector2()), tempstyle);
+            GUILayout.BeginArea(new Rect(guiPosition, size.ToVector2()), NodeGUIStyle);
             GUILayout.EndArea();
         }
     }
