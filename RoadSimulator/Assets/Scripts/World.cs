@@ -14,12 +14,10 @@ public class World : MonoBehaviour {
     public List<MovingEntity> entities = new List<MovingEntity>();
     public List<Car> cars = new List<Car>();
     public List<GameObject> CarObjects;
-    public Grid Grid = new Grid();
     public float Width { get; set; }
     public float Height { get; set; }
     public int MinDetectionBoxLength { get; internal set; }
     Graph<GameNode> graph = new Graph<GameNode>();
-    public bool ShouldRenderGrid = true;
     public GUIStyle NodeGUIStyle = new GUIStyle();
 
     public Car Target;
@@ -140,12 +138,6 @@ public class World : MonoBehaviour {
         {
             Vector3[] array = SpriteLocalToWorld(child);
 
-            //var x1 = child.transform.position.x;
-            //var y1 = child.transform.position.y;
-            //var x2 = 
-            //var p1 = Camera.main.WorldToScreenPoint(array[0]);
-            //var p2 = Camera.main.WorldToScreenPoint(array[1]);
-
             if (array[0].x <= x && array[1].x >= x &&
                 array[0].y <= y && array[1].y >= y)
             {
@@ -159,39 +151,7 @@ public class World : MonoBehaviour {
     private void OnGUI()
     {
         RenderNodes();
-
-        //if (ShouldRenderGrid)
-        //{
-        //    RenderGrid();
-        //}
     }
-
-    //private void RenderGrid()
-    //{
-    //    foreach (var cell in Grid.Cells)
-    //    {
-    //        cell.Render();
-    //    }
-    //}
-
-    //private GameObjectType GetCellType(GridCell cell)
-    //{
-    //    foreach (var child in GameObject.FindGameObjectsWithTag("Roads"))
-    //    {
-    //        Vector3[] array = SpriteLocalToWorld(child);
-
-    //        var p1 = Camera.main.WorldToScreenPoint(array[0]);
-    //        var p2 = Camera.main.WorldToScreenPoint(array[1]);
-
-    //        if (p1.x <= cell.x && p2.x >= cell.x + 20 &&
-    //            p1.y <= cell.y && p2.y >= cell.y + 20)
-    //        {
-    //            return GameObjectType.Road;
-    //        }
-    //    }
-
-    //    return GameObjectType.Grass;
-    //}
 
     Vector3[] SpriteLocalToWorld(GameObject obj)
     {
@@ -204,8 +164,6 @@ public class World : MonoBehaviour {
         array[1] = pos + sp.bounds.max;
         return array;
     }
-
-
 
     private void RenderNodes()
     {
@@ -226,11 +184,6 @@ public class World : MonoBehaviour {
         if (Input.GetKeyDown("r"))
         {
             SceneManager.LoadScene(0);
-        }
-
-        if (Input.GetKeyDown("g"))
-        {
-            ShouldRenderGrid = !ShouldRenderGrid;
         }
 
         float timeElapsed = Time.fixedDeltaTime;
