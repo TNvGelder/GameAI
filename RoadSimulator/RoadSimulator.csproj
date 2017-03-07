@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\PathFindingStrategies\PathFindingStrategy.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Matrix.cs" />
     <Compile Include="Assets\Scripts\DataStructures\PriorityQueue\BinaryHeap.cs" />
+    <Compile Include="Assets\Scripts\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\PathPlanner.cs" />
