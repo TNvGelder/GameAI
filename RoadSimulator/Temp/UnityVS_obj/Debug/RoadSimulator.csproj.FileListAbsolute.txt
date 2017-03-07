@@ -18,3 +18,4 @@ C:\Development\GameAI\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEngine.VR.xml
 C:\Development\GameAI\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEditor.xml
 C:\Development\GameAI\RoadSimulator\Temp\UnityVS_obj\Debug\Assembly-CSharp.dll
 C:\Development\GameAI\RoadSimulator\Temp\UnityVS_obj\Debug\Assembly-CSharp.pdb
+C:\Development\GameAI\RoadSimulator\Temp\UnityVS_obj\Debug\RoadSimulator.csprojResolveAssemblyReference.cache

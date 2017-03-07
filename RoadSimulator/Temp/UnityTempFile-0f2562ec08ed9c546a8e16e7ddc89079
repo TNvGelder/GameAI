@@ -81,12 +81,11 @@
 Assets/Scripts/BaseGameEntity.cs
 Assets/Scripts/Car.cs
 Assets/Scripts/DataStructures/GraphStructure/Edge.cs
-Assets/Scripts/DataStructures/GraphStructure/GameNode.cs
 Assets/Scripts/DataStructures/GraphStructure/Graph.cs
 Assets/Scripts/DataStructures/GraphStructure/GraphNode.cs
 Assets/Scripts/DataStructures/Matrix.cs
 Assets/Scripts/DataStructures/PriorityQueue/BinaryHeap.cs
-Assets/Scripts/GraphNodeGameObject.cs
+Assets/Scripts/GraphGenerator.cs
 Assets/Scripts/MovingEntity.cs
 Assets/Scripts/NewBehaviourScript.cs
 Assets/Scripts/SteeringBehaviours/CombinedSteeringBehavior.cs
