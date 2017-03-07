@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using DataStructures.GraphStructure;
-using Assets.Scripts.DataStructures.GraphStructure;
 using System.Linq;
 
 public class World : MonoBehaviour {
@@ -17,7 +16,7 @@ public class World : MonoBehaviour {
     public float Width { get; set; }
     public float Height { get; set; }
     public int MinDetectionBoxLength { get; internal set; }
-    Graph<GameNode> graph = new Graph<GameNode>();
+    Graph<GameObject> graph = new Graph<GameObject>();
     public GUIStyle NodeGUIStyle = new GUIStyle();
 
     public Car Target;
@@ -80,59 +79,79 @@ public class World : MonoBehaviour {
 
     private void GenerateGraph()
     {
-        var start = GameObject.FindGameObjectsWithTag("Roads")[0].transform;
+        var start = GameObject.FindGameObjectsWithTag("Roads")[0];
 
-        find_adjacent_node(start.position.x, start.position.y);
+        find_adjacent_node(start);
     }
 
-
-    float interval = 5.0f;
-    void find_adjacent_node(float x, float y)
+    void find_adjacent_node(GameObject obj)
     {
-        //if (x < -50 || x > 50) return;
+        var sp = obj.GetComponent<SpriteRenderer>().sprite;
 
-        if(!IsNode(x + interval, y) && IsRoad(x + interval, y))
+        var width = sp.bounds.size.x;
+        var height = sp.bounds.size.y;
+        var spacing = 2;
+        var widthInterval = spacing + width / 2;
+        var heightInterval = spacing + height / 2;
+        var x = obj.transform.position.x;
+        var y = obj.transform.position.y;
+
+        GameObject adjacentRoad = null;
+
+        // right
+        adjacentRoad = GetRoad(x + widthInterval, y);
+        if (adjacentRoad != null && !HasNode(adjacentRoad))
         {
-            PlaceRoadNode(x + interval, y);
-            find_adjacent_node(x + interval, y);
+            PlaceRoadNode(adjacentRoad, obj);
+            find_adjacent_node(adjacentRoad);
         }
 
-        if (!IsNode(x - interval, y) && IsRoad(x - interval, y))
+        // left
+        adjacentRoad = GetRoad(x - widthInterval, y);
+        if (adjacentRoad != null && !HasNode(adjacentRoad))
         {
-            PlaceRoadNode(x - interval, y);
-            find_adjacent_node(x - interval, y);
+            PlaceRoadNode(adjacentRoad, obj);
+            find_adjacent_node(adjacentRoad);
+        }
+        
+        // above
+        adjacentRoad = GetRoad(x, y + heightInterval);
+        if (adjacentRoad != null && !HasNode(adjacentRoad))
+        {
+            PlaceRoadNode(adjacentRoad, obj);
+            find_adjacent_node(adjacentRoad);
         }
 
-
-        if (!IsNode(x, y + interval) && IsRoad(x, y + interval))
+        // under
+        adjacentRoad = GetRoad(x, y - heightInterval);
+        if (adjacentRoad != null && !HasNode(adjacentRoad))
         {
-            PlaceRoadNode(x, y + interval);
-            find_adjacent_node(x, y + interval);
-        }
-
-        if (!IsNode(x, y - interval) && IsRoad(x, y - interval))
-        {
-            PlaceRoadNode(x, y - interval);
-            find_adjacent_node(x, y - interval);
+            PlaceRoadNode(adjacentRoad, obj);
+            find_adjacent_node(adjacentRoad);
         }
     }
 
-    private bool IsNode(float x, float y)
+    private bool HasNode(GameObject obj)
     {
-        return graph.Nodes.Any(n => n.Key.x == x && n.Key.y == y);
+        return graph.Nodes.Any(n => n.Key.transform.position.x == obj.transform.position.x && n.Key.transform.position.y == obj.transform.position.y);
     }
 
-    private void PlaceRoadNode(float x, float y)
+    private void PlaceRoadNode(GameObject to, GameObject from)
     {
-        graph.AddNode(new GameNode()
-        {
-            IsRoad = true,
-            x = x,
-            y = y
-        });
+        graph.AddEdge(to, from, CalculateRoadCost(to, from));
     }
 
-    bool IsRoad(float x, float y)
+    private float CalculateRoadCost(GameObject to, GameObject from)
+    {
+        var v1 = new Vector2D(to.transform.position.x, to.transform.position.y);
+        var v2 = new Vector2D(from.transform.position.x, from.transform.position.y);
+
+        var diff = (v2 - v1);
+
+        return diff.Length();
+    }
+
+    public GameObject GetRoad(float x, float y)
     {
         foreach (var child in GameObject.FindGameObjectsWithTag("Roads"))
         {
@@ -141,11 +160,11 @@ public class World : MonoBehaviour {
             if (array[0].x <= x && array[1].x >= x &&
                 array[0].y <= y && array[1].y >= y)
             {
-                return true;
+                return child;
             }
         }
 
-        return false;
+        return null;
     }
 
     private void OnGUI()
@@ -169,7 +188,7 @@ public class World : MonoBehaviour {
     {
         foreach (var node in graph.Nodes)
         {
-            var pos = new Vector2D(node.Key.x, node.Key.y);
+            var pos = new Vector2D(node.Key.transform.position.x, node.Key.transform.position.y);
             var screenPos = Camera.main.WorldToScreenPoint(pos.ToVector2());
 
             var size = new Vector2D(15, 15);

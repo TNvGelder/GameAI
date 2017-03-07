@@ -80,7 +80,6 @@
     <Compile Include="Assets\Scripts\BaseGameEntity.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Edge.cs" />
-    <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GameNode.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Graph.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GraphNode.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Matrix.cs" />
