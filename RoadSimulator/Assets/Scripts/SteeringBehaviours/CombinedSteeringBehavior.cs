@@ -11,7 +11,7 @@ namespace Assets.Scripts.SteeringBehaviours
         {
             { typeof(ObstacleAvoidanceBehavior), 5f },
             { typeof(FleeBehaviour), 1f },
-            { typeof(SeekBehaviour), 1f }
+            { typeof(SeekMovingEntityBehaviour), 1f }
         };
 
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)

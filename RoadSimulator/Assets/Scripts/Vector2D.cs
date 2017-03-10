@@ -57,6 +57,7 @@ namespace Assets.Scripts
             return new Vector2D(b != 0 ? a.X / b : a.X, b != 0 ? a.Y / b : a.Y);
         }
 
+
         public Vector2D Normalize()
         {
             return this / Length();
@@ -74,7 +75,14 @@ namespace Assets.Scripts
 
         public bool Equals(Vector2D other)
         {
-            return (X.Equals(other.X) && Y.Equals(other.Y));
+            return (nearlyEqual(X,other.X) && nearlyEqual(Y,other.Y));
+        }
+
+        private bool nearlyEqual(float a, float b)
+        {
+            float diff = Math.Abs(a - b);
+            return a == b || diff < 0.01f;
+           
         }
 
         public override int GetHashCode()

@@ -90,13 +90,17 @@
     <Compile Include="Assets\Scripts\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+    <Compile Include="Assets\Scripts\Path.cs" />
     <Compile Include="Assets\Scripts\PathPlanner.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\CombinedSteeringBehavior.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\Explore.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\FleeBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\FollowPathBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ICombinedSteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ISteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ObstacleAvoidanceBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviour.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\SeekMovingEntityBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SteeringBehaviour.cs" />
     <Compile Include="Assets\Scripts\Vector2D.cs" />
     <Compile Include="Assets\Scripts\World.cs" />

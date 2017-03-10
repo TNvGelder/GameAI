@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GraphGenerator : MonoBehaviour
 {
-    public Graph<GameObject> Graph = new Graph<GameObject>();
+    public Graph<Vector2D> Graph = new Graph<Vector2D>();
     public GUIStyle NodeGUIStyle;
     public bool Display = false;
     public Color Color = new Color(255, 255, 255);
@@ -71,35 +71,47 @@ public class GraphGenerator : MonoBehaviour
         }
     }
 
+    //private Vector2D gameObjectToVector2D(GameObject obj)
+    //{
+        
+    //}
+
     private bool DoesRoadHaveNode(GameObject obj)
     {
-        return Graph.Nodes.Any(n => n.Key.transform.position.x == obj.transform.position.x && n.Key.transform.position.y == obj.transform.position.y);
+        Vector2D position = new Vector2D(obj.transform.position);
+        return Graph.Nodes.ContainsKey(position);
     }
 
     public bool HasEdge(GameObject a, GameObject b)
     {
-        return _hasEdge(a, b) || _hasEdge(b, a);
+        //return _hasEdge(a, b) || _hasEdge(b, a);
+        Vector2D positionA = new Vector2D(a.transform.position);
+        Vector2D positionB = new Vector2D(b.transform.position);
+        return HasEdge(positionA, positionB);
     }
 
-    private bool _hasEdge(GameObject a, GameObject b)
+    public bool HasEdge(Vector2D positionA, Vector2D positionB)
     {
-        return Graph.Nodes.Any(edge => edge.Key == a && edge.Value.Adjacent.Any(x => x.Destination.Value == b));
+
+        return Graph.Nodes.Any(edge => edge.Key.Equals(positionA)  && edge.Value.Adjacent.Any(x => x.Destination.Value.Equals(positionB)));
     }
+
 
     private bool PlaceRoadNode(GameObject to, GameObject from)
     {
-        if (HasEdge(from, to))
+        Vector2D positionTo = new Vector2D(to.transform.position);
+        Vector2D positionFrom = new Vector2D(from.transform.position);
+        if (HasEdge(positionTo, positionFrom))
             return false;
 
-        Graph.AddEdge(to, from, CalculateRoadCost(to, from));
-
+        float cost = CalculateRoadCost(positionTo, positionFrom);
+        Graph.AddEdge(positionTo, positionFrom, cost);
+        Graph.AddEdge(positionFrom, positionTo, cost);
         return true;
     }
 
-    private float CalculateRoadCost(GameObject to, GameObject from)
+    private float CalculateRoadCost(Vector2D v1, Vector2D v2)
     {
-        var v1 = new Vector2D(to.transform.position.x, to.transform.position.y);
-        var v2 = new Vector2D(from.transform.position.x, from.transform.position.y);
 
         var diff = (v2 - v1);
 
@@ -111,7 +123,7 @@ public class GraphGenerator : MonoBehaviour
         foreach (var child in GameObject.FindGameObjectsWithTag("Roads"))
         {
             Vector3[] array = SpriteLocalToWorld(child);
-
+            
             if (array[0].x <= x && array[1].x >= x &&
                 array[0].y <= y && array[1].y >= y)
             {
@@ -149,7 +161,7 @@ public class GraphGenerator : MonoBehaviour
         foreach (var node in Graph.Nodes)
         {
             // draw nodes
-            var pos = new Vector2D(node.Key.transform.position.x, node.Key.transform.position.y);
+            var pos = node.Key;
             var screenPos = Camera.main.WorldToScreenPoint(pos.ToVector2());
 
             var size = new Vector2D(15, 15);
@@ -167,8 +179,9 @@ public class GraphGenerator : MonoBehaviour
             GL.Color(Color);
             foreach (var edge in node.Value.Adjacent)
             {
-                GL.Vertex(node.Key.transform.position);
-                GL.Vertex(edge.Destination.Value.transform.position);
+                GL.Vertex(new Vector2(pos.X, pos.Y));
+                Vector2D destPos = edge.Destination.Value;
+                GL.Vertex(new Vector2(destPos.X, destPos.Y));
             }
             GL.End();
             GL.PopMatrix();

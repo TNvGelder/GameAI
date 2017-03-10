@@ -12,11 +12,11 @@ namespace Assets.Scripts
         } }
         public World MyWorld { get; set; }
 
-        public BaseGameEntity(GameObject gameObject, Vector2D pos, Vector2D size, World w)
+        public BaseGameEntity(GameObject gameObject, Vector2D pos, Vector2D size)
         {
             GameObject = gameObject;
             Pos = pos;
-            MyWorld = w;
+            MyWorld = World.Instance;
             this.size = size;
         }
 

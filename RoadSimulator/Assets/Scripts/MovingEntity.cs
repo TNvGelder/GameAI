@@ -21,9 +21,13 @@ namespace Assets.Scripts
         public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
         public bool Tagged { get; internal set; }
         public float BRadius { get; set; }
+        private PathPlanner pathPlanner;
+        public PathPlanner PathPlanner { get { return pathPlanner; } }
 
-        public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size,  World w) : base(gameObject, pos, size, w)
+        public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
+            this.pathPlanner = pathPlanner;
+            pathPlanner.Me = this;
             Mass = 1;
             MaxSpeed = 10;
             BRadius = 2;
@@ -108,6 +112,11 @@ namespace Assets.Scripts
 
             //finally recreate m_vSide
             Side = Heading.Perp();
+        }
+
+        public bool CanWalkBetween(Vector2D pos1, Vector2D pos2)
+        {
+            return true;
         }
 
 
