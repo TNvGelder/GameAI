@@ -73,6 +73,5 @@ namespace Assets.Scripts
             return false;
         }
 
-
     }
 }

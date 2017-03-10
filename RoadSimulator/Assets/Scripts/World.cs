@@ -24,6 +24,9 @@ public class World : MonoBehaviour {
     public Color Color = new Color(255, 255, 255);
     public Material mat;
 
+    public Car player;
+    private Explore playerExplore;
+    private FollowPathBehaviour followPath;
     public Car Target;
 
     // Use this for initialization
@@ -53,9 +56,12 @@ public class World : MonoBehaviour {
         }
         if (cars.Count > 1)
         {
-            Target = cars[0];
-            Target.SteeringBehaviours.Add(new FleeBehaviour(Target, cars[1]));
-
+            player = cars[0];
+            playerExplore = new Explore(player);
+            followPath = new FollowPathBehaviour(player);
+            player.SteeringBehaviours.Add(playerExplore);
+            player.SteeringBehaviours.Add(followPath);
+            player.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
             for (int i = 1; i < cars.Count; i++)
             {
                 Car car = cars[i];
@@ -90,6 +96,18 @@ public class World : MonoBehaviour {
         if (Input.GetKeyDown("g"))
         {
             graphGenerator.Display = !graphGenerator.Display;
+        }
+	    if (Input.GetMouseButtonDown(0))
+	    {
+            Vector3 endPoint = Input.mousePosition;
+            endPoint.z = 0f;
+            endPoint = Camera.main.ScreenToWorldPoint(endPoint);
+            player.CombinedSteeringBehavior.DisableBehaviour(typeof(Explore));
+            player.CombinedSteeringBehavior.EnableBehaviour(typeof(FollowPathBehaviour));
+	        LinkedList<Vector2D> waypoints;
+	        player.PathPlanner.CreatePathToPosition(new Vector2D(endPoint), out waypoints);
+            followPath.Path = new Path(waypoints);
+            //player.SteeringBehaviours.Add(new FollowPathBehaviour());
         }
 
         float timeElapsed = Time.fixedDeltaTime;

@@ -50,6 +50,18 @@ namespace Assets.Scripts
             Tagged = true;
         }
 
+        public void removeBehaviour(Type behaviourType)
+        {
+            for (int i = 0; i < steeringBehaviours.Count; i++)
+            {
+                if (steeringBehaviours[i].GetType() == behaviourType)
+                {
+                    steeringBehaviours.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
         public override void Update(float timeElapsed)
         {
             if (steeringBehaviours.Count == 0)

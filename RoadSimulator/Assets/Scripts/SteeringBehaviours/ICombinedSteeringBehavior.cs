@@ -1,7 +1,11 @@
-﻿namespace Assets.Scripts.SteeringBehaviours
+﻿using System;
+
+namespace Assets.Scripts.SteeringBehaviours
 {
     public interface ICombinedSteeringBehavior
     {
         Vector2D Calculate();
+        void EnableBehaviour(Type behaviour);
+        void DisableBehaviour(Type behaviour);
     }
 }

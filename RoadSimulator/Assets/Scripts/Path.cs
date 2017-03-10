@@ -42,9 +42,15 @@ namespace Assets.Scripts
 
         public bool IsArrived(MovingEntity entity)
         {
+            if (currentWayPoint == null)
+            {
+                return true;
+            }
             Vector2D diff = currentWayPoint - entity.Pos;
             return (Math.Abs(diff.X) < 1 && Math.Abs(diff.Y) < 1);
         }
+
+
 
         public bool NextWayPoint()
         {

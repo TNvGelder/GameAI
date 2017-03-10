@@ -9,14 +9,27 @@ namespace Assets.Scripts.SteeringBehaviours
         private MovingEntity _entity;
         public Dictionary<Type, float> weights = new Dictionary<Type, float>()
         {
-            { typeof(ObstacleAvoidanceBehavior), 5f },
+            { typeof(ObstacleAvoidanceBehavior), 5f },//5
             { typeof(FleeBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },
+            { typeof(Explore), 1f },
         };
+
+        public Dictionary<Type, bool> enabled = new Dictionary<Type, bool>();
 
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)
         {
             _entity = entity;
+        }
+
+        public void EnableBehaviour(Type behaviour)
+        {
+            enabled[behaviour] = true;
+        }
+
+        public void DisableBehaviour(Type behaviour)
+        {
+            enabled[behaviour] = false;
         }
 
         public Vector2D Calculate()
@@ -25,12 +38,21 @@ namespace Assets.Scripts.SteeringBehaviours
 
             foreach(var behavior in _entity.SteeringBehaviours)
             {
+                Type type = behavior.GetType();
                 float weight = 1.0f;
-                if (weights.ContainsKey(behavior.GetType()))
+                if (weights.ContainsKey(type))
                 {
                     weight = weights[behavior.GetType()];
                 }
-                SteeringForce += behavior.Calculate();
+                if (!enabled.ContainsKey(type))
+                {
+                    enabled[type] = true;
+                }
+                if (enabled[type])
+                {
+                    SteeringForce += behavior.Calculate();
+                }
+                
             }
 
             return SteeringForce.Truncate(_entity.MaxSpeed);

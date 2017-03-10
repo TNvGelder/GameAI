@@ -13,6 +13,7 @@ namespace Assets.Scripts.SteeringBehaviours
         public FollowPathBehaviour(MovingEntity me) : base(me)
         {
             seekBehaviour = new SeekBehaviour(me, new Vector2D());
+            Path = new Path(new LinkedList<Vector2D>());
         }
 
         public override Vector2D Calculate()
@@ -20,7 +21,17 @@ namespace Assets.Scripts.SteeringBehaviours
             
             if (Path.IsArrived(ME))
             {
-                Path.NextWayPoint();
+                if (Path.WayPoints.Count > 0)
+                {
+                    Path.NextWayPoint();
+                }
+                else
+                {
+                    Path.Finished = true;
+                    ME.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
+                    ME.CombinedSteeringBehavior.EnableBehaviour(typeof(Explore));
+                }
+                
             }else if (Path.WayPoints.Count > 0)
             {
                 Path.Finished = false;

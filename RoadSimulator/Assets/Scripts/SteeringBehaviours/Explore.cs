@@ -13,7 +13,7 @@ namespace Assets.Scripts.SteeringBehaviours
         public Explore(MovingEntity me) : base(me)
         {
             rnd = new Random();
-            Path = new Path(new LinkedList<Vector2D>());
+            
         }
 
 
