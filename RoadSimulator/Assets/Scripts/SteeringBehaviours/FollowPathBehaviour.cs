@@ -17,9 +17,13 @@ namespace Assets.Scripts.SteeringBehaviours
 
         public override Vector2D Calculate()
         {
+            
             if (Path.IsArrived(ME))
             {
                 Path.NextWayPoint();
+            }else if (Path.WayPoints.Count > 0)
+            {
+                Path.Finished = false;
             }
             if (!Path.Finished)
             {

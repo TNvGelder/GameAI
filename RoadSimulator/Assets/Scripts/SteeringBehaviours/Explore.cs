@@ -13,28 +13,33 @@ namespace Assets.Scripts.SteeringBehaviours
         public Explore(MovingEntity me) : base(me)
         {
             rnd = new Random();
+            Path = new Path(new LinkedList<Vector2D>());
         }
 
 
         private void chooseNextPos(int decisionAmount,Vector2D currentPos, Vector2D prevPos)
         {
             Dictionary<Vector2D,GraphNode<Vector2D>> nodes = ME.PathPlanner.Graph.Nodes;
-            int count = nodes.Count;
 
-            if (nodes.ContainsKey(currentPos) && nodes.ContainsKey(prevPos) && count > 0 && decisionAmount > 0)
+            if (nodes.ContainsKey(currentPos) && nodes.ContainsKey(prevPos) && decisionAmount > 0)
             {
                 GraphNode<Vector2D> node = nodes[currentPos];
                 GraphNode<Vector2D> prevNode = nodes[prevPos];
-                int i = rnd.Next(count-1);
-                
-                Edge<Vector2D> edge = node.Adjacent[i];
-                if (edge.Destination == prevNode && count > 1)
+                int count = node.Adjacent.Count;
+                if (count > 0)
                 {
-                    edge = node.Adjacent[Math.Abs(i - 1)];
+                    int i = rnd.Next(count - 1);
+
+                    Edge<Vector2D> edge = node.Adjacent[i];
+                    if (edge.Destination == prevNode && count > 1)
+                    {
+                        edge = node.Adjacent[Math.Abs(i - 1)];
+                    }
+                    Vector2D nextPos = edge.Destination.Value;
+                    Path.WayPoints.AddLast(edge.Destination.Value);
+                    chooseNextPos(decisionAmount - 1, nextPos, currentPos);
                 }
-                Vector2D nextPos = edge.Destination.Value;
-                Path.WayPoints.AddLast(edge.Destination.Value);
-                chooseNextPos(decisionAmount-1, nextPos, currentPos);
+                
 
             }
         }

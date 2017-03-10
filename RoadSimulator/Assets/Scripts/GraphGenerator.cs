@@ -3,27 +3,17 @@ using DataStructures.GraphStructure;
 using System.Linq;
 using UnityEngine;
 
-public class GraphGenerator : MonoBehaviour
+public class GraphGenerator
 {
     public Graph<Vector2D> Graph = new Graph<Vector2D>();
-    public GUIStyle NodeGUIStyle;
+    
     public bool Display = false;
-    public Color Color = new Color(255, 255, 255);
-    public Material mat;
+    
+    
 
-    void Start()
+    public GraphGenerator()
     {
-        Texture2D tex = new Texture2D(2, 2);
-        for (int i = 0; i < tex.width; i++)
-        {
-            for (int j = 0; j < tex.height; j++)
-            {
-                tex.SetPixel(i, j, Color);
-            }
-        }
-        tex.Apply();
-        NodeGUIStyle = new GUIStyle();
-        NodeGUIStyle.normal.background = tex;
+        
 
         GenerateGraph();
     }
@@ -146,45 +136,7 @@ public class GraphGenerator : MonoBehaviour
         return array;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown("g"))
-        {
-            Display = !Display;
-        }
-    }
 
-    private void OnGUI()
-    {
-        if (!Display) return;
-
-        foreach (var node in Graph.Nodes)
-        {
-            // draw nodes
-            var pos = node.Key;
-            var screenPos = Camera.main.WorldToScreenPoint(pos.ToVector2());
-
-            var size = new Vector2D(15, 15);
-
-            var guiPosition = new Vector2D(screenPos.x, Screen.height - screenPos.y);
-            guiPosition = guiPosition - new Vector2D(size.X / 2, size.Y / 2);
-
-            GUILayout.BeginArea(new Rect(guiPosition.ToVector2(), size.ToVector2()), NodeGUIStyle);
-            GUILayout.EndArea();
-
-            // draw edges
-            GL.PushMatrix();
-            mat.SetPass(0);
-            GL.Begin(GL.LINES);
-            GL.Color(Color);
-            foreach (var edge in node.Value.Adjacent)
-            {
-                GL.Vertex(new Vector2(pos.X, pos.Y));
-                Vector2D destPos = edge.Destination.Value;
-                GL.Vertex(new Vector2(destPos.X, destPos.Y));
-            }
-            GL.End();
-            GL.PopMatrix();
-        }
-    }
+    
+    
 }

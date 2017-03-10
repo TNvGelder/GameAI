@@ -11,7 +11,7 @@ namespace Assets.Scripts.SteeringBehaviours
         {
             { typeof(ObstacleAvoidanceBehavior), 5f },
             { typeof(FleeBehaviour), 1f },
-            { typeof(SeekMovingEntityBehaviour), 1f }
+            { typeof(SeekMovingEntityBehaviour), 1f },
         };
 
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)
@@ -25,7 +25,12 @@ namespace Assets.Scripts.SteeringBehaviours
 
             foreach(var behavior in _entity.SteeringBehaviours)
             {
-                SteeringForce += behavior.Calculate() * weights[behavior.GetType()];
+                float weight = 1.0f;
+                if (weights.ContainsKey(behavior.GetType()))
+                {
+                    weight = weights[behavior.GetType()];
+                }
+                SteeringForce += behavior.Calculate();
             }
 
             return SteeringForce.Truncate(_entity.MaxSpeed);

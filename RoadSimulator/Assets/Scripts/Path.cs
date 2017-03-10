@@ -12,7 +12,7 @@ namespace Assets.Scripts
         private bool finished = true;
         public bool Finished { get {
                 return finished;
-           } }
+           } set { finished = value; } }
         public Vector2D CurrentWayPoint
         {
             get
@@ -43,7 +43,7 @@ namespace Assets.Scripts
         public bool IsArrived(MovingEntity entity)
         {
             Vector2D diff = currentWayPoint - entity.Pos;
-            return (Math.Abs(diff.X) < .3 && Math.Abs(diff.Y) < .3);
+            return (Math.Abs(diff.X) < 1 && Math.Abs(diff.Y) < 1);
         }
 
         public bool NextWayPoint()
