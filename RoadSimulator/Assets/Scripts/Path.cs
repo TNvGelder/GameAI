@@ -19,6 +19,7 @@ namespace Assets.Scripts
             {
                 return currentWayPoint;
             }
+            set { currentWayPoint = value; }
         }
 
         public LinkedList<Vector2D> WayPoints {
