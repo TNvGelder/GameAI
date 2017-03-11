@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekMovingEntityBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SteeringBehaviour.cs" />
+    <Compile Include="Assets\Scripts\UI.cs" />
     <Compile Include="Assets\Scripts\Vector2D.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
   </ItemGroup>

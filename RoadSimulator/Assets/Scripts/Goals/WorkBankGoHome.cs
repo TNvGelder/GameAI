@@ -19,20 +19,18 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            Goal goal = null;
-
             if (!HasWorked)
             {
-                AddSubgoal(GoTo("Work"));
                 HasWorked = true;
+                AddSubgoal(GoTo("Work"));
             } else if (!HasGoneToBank)
             {
-                AddSubgoal(GoTo("Bank"));
                 HasGoneToBank = true;
+                AddSubgoal(GoTo("Bank"));
             } else if (!HasGoneHome)
             {
-                AddSubgoal(GoTo("Home"));
                 HasGoneHome = true;
+                AddSubgoal(GoTo("Home"));
             } else
             {
                 return;
@@ -46,7 +44,7 @@ namespace Assets.Scripts.Goals
             var obj = GameObject.FindGameObjectsWithTag(tag)[0];
             var target = new Vector2D(obj.transform.position.x, obj.transform.position.y);
 
-            return new MoveToPosition(Owner, target, "Going " + tag);
+            return new MoveToPosition(Owner, target, "Going to " + tag);
         }
 
         public override Status Process()

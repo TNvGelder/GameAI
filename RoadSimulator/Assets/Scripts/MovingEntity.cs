@@ -102,7 +102,7 @@ namespace Assets.Scripts
             // only decrease fuel when moving
             if (Velocity.Length() > 0.1)
             {
-                Fuel -= 0.05f;
+                Fuel -= 0.02f;
             }
 
             //update the heading if the vehicle has a velocity greater than a very small

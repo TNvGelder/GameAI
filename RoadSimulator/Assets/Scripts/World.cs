@@ -171,7 +171,8 @@ public class World : MonoBehaviour {
         foreach (var car in cars)
         {
             var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var text = "<color=" + (car.Fuel > 30f ? "white" : "red") + ">Fuel : " + Math.Round(car.Fuel, 2).ToString() + "</color>";
+            var color = car.Fuel > 30f ? "white" : "red";
+            var text = UI.ColorizeText("Fuel : " + Math.Round(car.Fuel, 2).ToString(), color);
             var labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
             GUI.Label(labelRect, text, GoalListStyle);
         }
@@ -183,7 +184,7 @@ public class World : MonoBehaviour {
         {
             var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
             var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
-            GUI.Label(labelRect, car.ID.ToString(), GoalListStyle);
+            GUI.Label(labelRect, UI.ColorizeText(car.ID.ToString(), "white"), GoalListStyle);
         }
     }
 
