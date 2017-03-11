@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 
 public class World : MonoBehaviour {
 
@@ -15,6 +16,7 @@ public class World : MonoBehaviour {
     public List<GameObject> CarObjects;
     public float Width { get; set; }
     public float Height { get; set; }
+    public bool DisplayIDs { get; set; }
     public bool DisplayGraph { get; set; }
     public bool DisplayGoals { get; set; }
     public int MinDetectionBoxLength { get; internal set; }
@@ -24,9 +26,13 @@ public class World : MonoBehaviour {
     private Graph<Vector2D> graph;
     public Graph<Vector2D> Graph { get { return graph; } }
     private GraphGenerator graphGenerator;
-    public GUIStyle NodeGUIStyle;
+
+    // styles
+    static Material lineMaterial;
+    public GUIStyle GraphNodeGUIStyle;
     public GUIStyle GoalListStyle;
-    public Color Color = new Color(255, 255, 255);
+    public GUIStyle TagGUIStyle;
+    public Color GraphColor = new Color(255, 255, 255);
 
     public Car player;
 
@@ -40,8 +46,7 @@ public class World : MonoBehaviour {
         Width = Height * Screen.width / Screen.height;
         MinDetectionBoxLength = 5;
 
-        GoalListStyle = new GUIStyle();
-        DisplayGoals = true;
+        InitializeStyles();
 
         GameObject carGameObjects = GameObject.Find("Cars");
         foreach (Transform child in carGameObjects.transform)//Gets direct children of cars
@@ -59,36 +64,57 @@ public class World : MonoBehaviour {
         }
 
         player = cars[0];
-
-        //if (cars.Count > 1)
-        //{
-        //    player = cars[0];
-        //    playerExplore = new Explore(player);
-        //    followPath = new FollowPathBehaviour(player);
-        //    player.SteeringBehaviours.Add(playerExplore);
-        //    player.SteeringBehaviours.Add(followPath);
-        //    player.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
-        //    for (int i = 1; i < cars.Count; i++)
-        //    {
-        //        Car car = cars[i];
-        //        car.SteeringBehaviours.Add(new Explore(car));
-        //    }
-        //}
     }
 
-    private void GenerateGraph()
+    private void InitializeStyles()
     {
+        // graph
         Texture2D tex = new Texture2D(2, 2);
         for (int i = 0; i < tex.width; i++)
         {
             for (int j = 0; j < tex.height; j++)
             {
-                tex.SetPixel(i, j, Color);
+                tex.SetPixel(i, j, GraphColor);
             }
         }
         tex.Apply();
-        NodeGUIStyle = new GUIStyle();
-        NodeGUIStyle.normal.background = tex;
+        GraphNodeGUIStyle = new GUIStyle();
+        GraphNodeGUIStyle.normal.background = tex;
+
+        // goal list
+        GoalListStyle = new GUIStyle();
+        GoalListStyle.alignment = TextAnchor.UpperLeft;
+
+        // tag
+        tex = new Texture2D(2, 2);
+        for (int i = 0; i < tex.width; i++)
+        {
+            for (int j = 0; j < tex.height; j++)
+            {
+                tex.SetPixel(i, j, new Color(255, 255, 0));
+            }
+        }
+        tex.Apply();
+        TagGUIStyle = new GUIStyle();
+        TagGUIStyle.normal.background = tex;
+
+        // lines
+        // Unity has a built-in shader that is useful for drawing
+        // simple colored things.
+        Shader shader = Shader.Find("Hidden/Internal-Colored");
+        lineMaterial = new Material(shader);
+        lineMaterial.hideFlags = HideFlags.HideAndDontSave;
+        // Turn on alpha blending
+        lineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        lineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        // Turn backface culling off
+        lineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        // Turn off depth writes
+        lineMaterial.SetInt("_ZWrite", 0);
+    }
+
+    private void GenerateGraph()
+    {
         graphGenerator = new GraphGenerator();
         graph = graphGenerator.Graph;
     }
@@ -96,19 +122,11 @@ public class World : MonoBehaviour {
 	void FixedUpdate () {
         if (Input.GetKeyDown("r"))
         {
-            SceneManager.LoadScene(0);
-        }
-        if (Input.GetKeyDown("g"))
-        {
-            DisplayGraph = !DisplayGraph;
+            Reload();
         }
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 endPoint = Input.mousePosition;
-            endPoint.z = 0f;
-            endPoint = Camera.main.ScreenToWorldPoint(endPoint);
-
-            player.Think.AddSubgoal(new MoveToPosition(player, new Vector2D(endPoint.x, endPoint.y)));
+            HandleClick();
         }
 
         float timeElapsed = Time.fixedDeltaTime;
@@ -118,19 +136,52 @@ public class World : MonoBehaviour {
         }
     }
 
+    private void Reload()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void HandleClick()
+    {
+        Vector3 endPoint = Input.mousePosition;
+        endPoint.z = 0f;
+        endPoint = Camera.main.ScreenToWorldPoint(endPoint);
+
+        var mask = (SpriteRenderer)GameObject.Find("ClickMask").GetComponent("SpriteRenderer");
+        if (!mask.bounds.Contains(endPoint))
+        {
+            ((Think)player.Think).AddMoveToPosition(new Vector2D(endPoint.x, endPoint.y));
+        }
+    }
+
     private void OnGUI()
     {
         if (DisplayGraph) RenderGraph();
         if (DisplayGoals) RenderGoals();
+        if (DisplayIDs) RenderIDs();
+    }
+
+    private void RenderIDs()
+    {
+        foreach (var car in cars)
+        {
+            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
+            var text = car.Think.GetDisplayText();
+            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y, 100, 50);
+            GUI.Label(labelRect, text, GoalListStyle);
+
+            labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
+            GUI.Label(labelRect, car.ID.ToString(), GoalListStyle);
+        }
     }
 
     private void RenderGoals()
     {
         foreach (var car in cars)
         {
-            var text = car.Think.GetDisplayText();
             var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var labelRect = new Rect(screenPos.x - 48, screenPos.y - 23, 100, 50);
+            var text = car.Think.GetDisplayText();
+            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y, 100, 50);
             GUI.Label(labelRect, text, GoalListStyle);
         }
     }
@@ -148,14 +199,15 @@ public class World : MonoBehaviour {
             var guiPosition = new Vector2D(screenPos.x, Screen.height - screenPos.y);
             guiPosition = guiPosition - new Vector2D(size.X / 2, size.Y / 2);
 
-            GUILayout.BeginArea(new Rect(guiPosition.ToVector2(), size.ToVector2()), NodeGUIStyle);
+            GUILayout.BeginArea(new Rect(guiPosition.ToVector2(), size.ToVector2()), GraphNodeGUIStyle);
             GUILayout.EndArea();
 
+            // Apply the line material
+            lineMaterial.SetPass(0);
             // draw edges
             GL.PushMatrix();
-            //mat.SetPass(0);
             GL.Begin(GL.LINES);
-            GL.Color(Color);
+            GL.Color(GraphColor);
             foreach (var edge in node.Value.Adjacent)
             {
                 GL.Vertex(new Vector2(pos.X, pos.Y));
@@ -164,6 +216,30 @@ public class World : MonoBehaviour {
             }
             GL.End();
             GL.PopMatrix();
+        }
+    }
+
+    public void TagObstaclesWithinViewRange(MovingEntity entity, double range)
+    {
+        TagNeighbors(entity, entities, range);
+    }
+
+    public void TagNeighbors(MovingEntity entity, List<MovingEntity> obstacles, double radius)
+    {
+        foreach(var e in obstacles)
+        {
+            if (entity.Equals(e)) continue;
+
+            e.Tagged = false;
+
+            var to = e.Pos - entity.Pos;
+
+            var range = radius + e.BRadius;
+
+            if (to.LengthSquared() < range * range)
+            {
+                e.Tagged = true;
+            }
         }
     }
 }

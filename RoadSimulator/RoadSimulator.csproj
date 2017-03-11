@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Goals\Goal.cs" />
     <Compile Include="Assets\Scripts\Goals\GoalComposite.cs" />
     <Compile Include="Assets\Scripts\Goals\Message.cs" />
+    <Compile Include="Assets\Scripts\Goals\Explore.cs" />
     <Compile Include="Assets\Scripts\Goals\Think.cs" />
     <Compile Include="Assets\Scripts\Goals\TraverseEdge.cs" />
     <Compile Include="Assets\Scripts\Goals\MoveToPosition.cs" />

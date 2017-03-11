@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Goals
 {
-    public class MoveToPosition : GoalComposite
+    public class MoveToPosition : Goal
     {
         private Explore playerExplore;
         private FollowPathBehaviour followPath;
@@ -18,15 +18,30 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            Owner.CombinedSteeringBehavior.DisableBehaviour(typeof(Explore));
-            Owner.CombinedSteeringBehavior.EnableBehaviour(typeof(FollowPathBehaviour));
             LinkedList<Vector2D> waypoints;
             Owner.PathPlanner.CreatePathToPosition(Target, out waypoints);
             followPath = new FollowPathBehaviour(Owner);
             followPath.Path = new Path(waypoints);
-            Owner.SteeringBehaviours.Add(new FollowPathBehaviour(Owner));
+            Owner.SteeringBehaviours.Add(followPath);
 
             base.Activate();
+        }
+
+        public override void Terminate()
+        {
+            Owner.RemoveBehaviour(typeof(Scripts.SteeringBehaviours.FollowPathBehaviour));
+
+            base.Terminate();
+        }
+
+        public override Status Process()
+        {
+            if (Owner.IsAtPosition(Target))
+            {
+                status = Status.Completed;
+            }
+
+            return base.Process();
         }
     }
 }

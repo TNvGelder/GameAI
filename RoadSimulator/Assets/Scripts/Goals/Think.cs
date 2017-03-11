@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.SteeringBehaviours;
+using System;
 
 namespace Assets.Scripts.Goals
 {
@@ -12,14 +13,31 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            if (Subgoals.Count > 0)
-            {
-                base.RemoveAllSubgoals();
+            //Owner.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(Owner));
+
+            if (Subgoals.Count == 0) { 
+                Subgoals.Add(new Explore(Owner));
             }
 
-            Subgoals.Add(new MoveToPosition(Owner, new Scripts.Vector2D(-5.67f, -11.42f)));
-
             base.Activate();
+        }
+
+        public void AddMoveToPosition(Vector2D target)
+        {
+            RemoveAllSubgoals();
+            Subgoals.Add(new MoveToPosition(Owner, target));
+        }
+
+        public override Status Process()
+        {
+            var s = base.Process();
+
+            if (s == Status.Completed || s == Status.Failed)
+            {
+                status = Status.Inactive;
+            }
+
+            return s;
         }
     }
 }

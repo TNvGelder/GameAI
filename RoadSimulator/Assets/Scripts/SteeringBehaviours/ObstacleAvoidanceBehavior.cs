@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.DataStructures;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.SteeringBehaviours
@@ -11,7 +10,6 @@ namespace Assets.Scripts.SteeringBehaviours
         {
         }
 
-        // https://github.com/wangchen/Programming-Game-AI-by-Example-src/blob/master/Buckland_Chapter3-Steering%20Behaviors/SteeringBehaviors.cpp#L859
         public override Vector2D Calculate()
         {
             var world = this.ME.MyWorld;
@@ -20,8 +18,7 @@ namespace Assets.Scripts.SteeringBehaviours
                   (this.ME.Speed() / this.ME.MaxSpeed) *
                   world.MinDetectionBoxLength;
 
-            // todo: hier moeten we alleen entities in de buurt pakken
-            List<MovingEntity> movingEntities = world.entities;
+            world.TagObstaclesWithinViewRange(ME, m_dDBoxLength);
 
             MovingEntity ClosestIntersectingObstacle = null;
 
@@ -29,12 +26,11 @@ namespace Assets.Scripts.SteeringBehaviours
 
             Vector2D LocalPosOfClosestObstacle = null;
 
-            foreach (var cur in movingEntities)
+            foreach (var cur in world.entities)
             {
-                // Tagged moet aan/uit gezet worden wanneer we kijken welke entities in de buurt zitten
-                // nu is het altijd true
                 if (cur.Tagged)
                 {
+                    //Debug.Log(ME.ID + " tagged " + cur.ID);
                     Vector2D LocalPos = PointToLocalSpace(cur.Pos,
                                              ME.Heading,
                                              ME.Side,
@@ -42,7 +38,6 @@ namespace Assets.Scripts.SteeringBehaviours
 
                     if (LocalPos.X >= 0)
                     {
-                        // het is ff de vraag hoe we bounded radius moeten bepalen...
                         double ExpandedRadius = cur.BRadius + ME.BRadius;
 
                         //if the distance from the x axis to the object's position is less
@@ -105,15 +100,11 @@ namespace Assets.Scripts.SteeringBehaviours
             }
 
             //finally, convert the steering vector from local to world space
-
-            // hier komt altijd (0,0) uit omdat Heading en Side 0,0 zijn.
-            // in VectorToWorldSpace doe je dus in principe SteeringForce * 0
             return VectorToWorldSpace(SteeringForce,
                                       ME.Heading,
                                       ME.Side);
         }
 
-        // https://github.com/wangchen/Programming-Game-AI-by-Example-src/blob/aa5379f3c4dc142577c7f010ebfb705e78754c5c/Common/2D/Transformations.h#L141
         public Vector2D PointToLocalSpace(Vector2D point, Vector2D AgentHeading, Vector2D AgentSide, Vector2D AgentPosition)
         {
             //make a copy of the point
@@ -131,7 +122,6 @@ namespace Assets.Scripts.SteeringBehaviours
         }
 
 
-        // https://github.com/wangchen/Programming-Game-AI-by-Example-src/blob/aa5379f3c4dc142577c7f010ebfb705e78754c5c/Common/2D/Transformations.h#L118
         public Vector2D VectorToWorldSpace(Vector2D vec,
                                      Vector2D AgentHeading,
                                      Vector2D AgentSide)

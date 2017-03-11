@@ -25,6 +25,11 @@ namespace Assets.Scripts.Goals
                 Subgoals.Remove(Subgoals[0]);
             }
 
+            if (status == Status.Inactive)
+            {
+                Activate();
+            }
+
             if (Subgoals.Count > 0)
             {
                 Status s = Subgoals[0].Process();
@@ -35,10 +40,9 @@ namespace Assets.Scripts.Goals
                 }
 
                 return s;
-            } else
-            {
-                return Status.Completed;
             }
+
+            return Status.Completed;
         }
 
         public void RemoveAllSubgoals()

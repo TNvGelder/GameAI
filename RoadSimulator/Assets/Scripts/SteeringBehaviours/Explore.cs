@@ -38,8 +38,6 @@ namespace Assets.Scripts.SteeringBehaviours
                     Path.WayPoints.AddLast(edge.Destination.Value);
                     chooseNextPos(decisionAmount - 1, nextPos, currentPos);
                 }
-                
-
             }
         }
 

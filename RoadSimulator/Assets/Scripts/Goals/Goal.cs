@@ -15,6 +15,11 @@ namespace Assets.Scripts.Goals
         }
         public virtual Status Process()
         {
+            if (status == Status.Inactive)
+            {
+                Activate();
+            }
+
             return status;
         }
         public virtual void Terminate()

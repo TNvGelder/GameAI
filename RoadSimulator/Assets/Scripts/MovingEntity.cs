@@ -20,8 +20,6 @@ namespace Assets.Scripts
         private List<ISteeringBehavior> steeringBehaviours;
         public List<ISteeringBehavior> SteeringBehaviours { get { return steeringBehaviours; } }
         public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
-        public bool Tagged { get; internal set; }
-        public float BRadius { get; set; }
         private PathPlanner pathPlanner;
         public PathPlanner PathPlanner { get { return pathPlanner; } }
         public GoalComposite Think { get; set; }
@@ -146,7 +144,7 @@ namespace Assets.Scripts
 
         public bool IsAtPosition(Vector2D pos)
         {
-            var tolerance = 10f;
+            var tolerance = 8f;
 
             return this.Pos.Vec2DDistanceSq(pos) < tolerance * tolerance;
         }

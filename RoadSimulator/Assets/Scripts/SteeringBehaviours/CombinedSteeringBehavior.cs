@@ -9,7 +9,7 @@ namespace Assets.Scripts.SteeringBehaviours
         private MovingEntity _entity;
         public Dictionary<Type, float> weights = new Dictionary<Type, float>()
         {
-            { typeof(ObstacleAvoidanceBehavior), 5f },//5
+            { typeof(ObstacleAvoidanceBehavior), 2f },
             { typeof(FleeBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },
             { typeof(Explore), 1f },
@@ -50,9 +50,8 @@ namespace Assets.Scripts.SteeringBehaviours
                 }
                 if (enabled[type])
                 {
-                    SteeringForce += behavior.Calculate();
+                    SteeringForce += behavior.Calculate() * weight;
                 }
-                
             }
 
             return SteeringForce.Truncate(_entity.MaxSpeed);
