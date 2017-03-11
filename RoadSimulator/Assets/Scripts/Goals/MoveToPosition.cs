@@ -15,6 +15,11 @@ namespace Assets.Scripts.Goals
             Name = "MoveToPosition";
         }
 
+        public MoveToPosition(MovingEntity owner, Vector2D target, string name) : this(owner, target)
+        {
+            Name = name;
+        }
+
         public override void Activate()
         {
             LinkedList<Vector2D> waypoints;

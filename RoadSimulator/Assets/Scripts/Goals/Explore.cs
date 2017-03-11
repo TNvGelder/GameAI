@@ -13,7 +13,6 @@ namespace Assets.Scripts.Goals
         public override void Activate()
         {
             Owner.SteeringBehaviours.Add(new Scripts.SteeringBehaviours.Explore(Owner));
-            //Owner.SteeringBehaviours.Add(followPath);
 
             base.Activate();
         }

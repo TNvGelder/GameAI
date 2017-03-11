@@ -64,7 +64,7 @@ namespace Assets.Scripts.Goals
                     r += ((GoalComposite)sGoal).GetDisplayText("  " + padding) + "\r\n";
                 } else
                 {
-                    r += "<color=" + (sGoal.IsActive() ? "blue" : "white") + ">" + sGoal.Name + "</color>";
+                    r += padding + "<color=" + (sGoal.IsActive() ? "blue" : "white") + ">" + sGoal.Name + "</color>\r\n";
                 }
             }
             return r;

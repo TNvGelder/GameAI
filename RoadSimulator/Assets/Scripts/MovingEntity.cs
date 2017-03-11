@@ -74,8 +74,6 @@ namespace Assets.Scripts
                 return;
             }
 
-            Fuel -= 0.05f;
-
             Think.Process();
 
             if (steeringBehaviours.Count == 0)
@@ -100,6 +98,12 @@ namespace Assets.Scripts
 
             this.Pos += Velocity * timeElapsed;
             GameObject.transform.position = new Vector2((float)this.Pos.X,(float) this.Pos.Y);
+
+            // only decrease fuel when moving
+            if (Velocity.Length() > 0.1)
+            {
+                Fuel -= 0.05f;
+            }
 
             //update the heading if the vehicle has a velocity greater than a very small
             //value
