@@ -19,6 +19,8 @@ public class World : MonoBehaviour {
     public bool DisplayIDs { get; set; }
     public bool DisplayGraph { get; set; }
     public bool DisplayGoals { get; set; }
+    public bool DisplayStats { get; set; }
+    public System.Random Random = new System.Random();
     public int MinDetectionBoxLength { get; internal set; }
     public static World instance;
     public static World Instance { get { return instance; } }
@@ -45,6 +47,8 @@ public class World : MonoBehaviour {
         Height = cam.orthographicSize * 2;
         Width = Height * Screen.width / Screen.height;
         MinDetectionBoxLength = 5;
+
+        DisplayStats = true;
 
         InitializeStyles();
 
@@ -159,6 +163,18 @@ public class World : MonoBehaviour {
         if (DisplayGraph) RenderGraph();
         if (DisplayGoals) RenderGoals();
         if (DisplayIDs) RenderIDs();
+        if (DisplayStats) RenderStats();
+    }
+
+    private void RenderStats()
+    {
+        foreach (var car in cars)
+        {
+            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
+            var text = "<color=" + (car.Fuel > 30f ? "white" : "red") + ">Fuel : " + Math.Round(car.Fuel, 2).ToString() + "</color>";
+            var labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
+            GUI.Label(labelRect, text, GoalListStyle);
+        }
     }
 
     private void RenderIDs()
@@ -166,11 +182,7 @@ public class World : MonoBehaviour {
         foreach (var car in cars)
         {
             var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var text = car.Think.GetDisplayText();
-            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y, 100, 50);
-            GUI.Label(labelRect, text, GoalListStyle);
-
-            labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
+            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
             GUI.Label(labelRect, car.ID.ToString(), GoalListStyle);
         }
     }

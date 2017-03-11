@@ -37,6 +37,13 @@ namespace Assets.Scripts.Goals
                 status = Status.Inactive;
             }
 
+            if (Owner.Fuel < 30.0 && Subgoals[0].GetType() != typeof(GetFuel))
+            {
+                RemoveAllSubgoals();
+                Subgoals.Add(new GetFuel(Owner));
+                return Status.Active;
+            }
+
             return s;
         }
     }

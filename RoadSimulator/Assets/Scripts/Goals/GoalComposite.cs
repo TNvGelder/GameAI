@@ -56,7 +56,7 @@ namespace Assets.Scripts.Goals
 
         public string GetDisplayText(string padding = "")
         {
-            var r = padding + "- " + Name + "\r\n";
+            var r = padding + "<color=white>- " + Name + "</color>\r\n";
             foreach (var sGoal in Subgoals)
             {
                 if (sGoal is GoalComposite)
@@ -64,7 +64,7 @@ namespace Assets.Scripts.Goals
                     r += ((GoalComposite)sGoal).GetDisplayText("  " + padding) + "\r\n";
                 } else
                 {
-                    r += "<color=" + (sGoal.IsActive() ? "blue" : "black") + "><size=20>" + sGoal.Name + "</size></color>";
+                    r += "<color=" + (sGoal.IsActive() ? "blue" : "white") + ">" + sGoal.Name + "</color>";
                 }
             }
             return r;

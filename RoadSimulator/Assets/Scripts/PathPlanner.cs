@@ -57,8 +57,6 @@ namespace Assets.Scripts
 
         public bool CreatePathToPosition(Vector2D TargetPos, out LinkedList<Vector2D> path)
         {
-
-
             path = new LinkedList<Vector2D>();
 
             GraphNode<Vector2D> closestNodeToMe = GetClosestNodeToPosition(Me.Pos);

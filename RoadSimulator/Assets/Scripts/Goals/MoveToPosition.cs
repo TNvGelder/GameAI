@@ -6,7 +6,6 @@ namespace Assets.Scripts.Goals
 {
     public class MoveToPosition : Goal
     {
-        private Explore playerExplore;
         private FollowPathBehaviour followPath;
         private Vector2D Target;
 

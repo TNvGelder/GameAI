@@ -23,12 +23,14 @@ namespace Assets.Scripts
         private PathPlanner pathPlanner;
         public PathPlanner PathPlanner { get { return pathPlanner; } }
         public GoalComposite Think { get; set; }
+        public float Fuel { get; internal set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
             this.pathPlanner = pathPlanner;
             pathPlanner.Me = this;
             Mass = 1;
+            Fuel = MyWorld.Random.Next(70, 100);
             MaxSpeed = 10;
             BRadius = 2;
             MaxTurnRate = 9999999999999;
@@ -67,6 +69,13 @@ namespace Assets.Scripts
 
         public override void Update(float timeElapsed)
         {
+            if (Fuel <= 0)
+            {
+                return;
+            }
+
+            Fuel -= 0.05f;
+
             Think.Process();
 
             if (steeringBehaviours.Count == 0)

@@ -95,7 +95,7 @@
     <Compile Include="Assets\Scripts\Goals\TraverseEdge.cs" />
     <Compile Include="Assets\Scripts\Goals\MoveToPosition.cs" />
     <Compile Include="Assets\Scripts\Goals\DummyGoal.cs" />
-    <Compile Include="Assets\Scripts\Goals\VisitShop.cs" />
+    <Compile Include="Assets\Scripts\Goals\GetFuel.cs" />
     <Compile Include="Assets\Scripts\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
