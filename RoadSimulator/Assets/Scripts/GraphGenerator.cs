@@ -7,14 +7,8 @@ public class GraphGenerator
 {
     public Graph<Vector2D> Graph = new Graph<Vector2D>();
     
-    public bool Display = false;
-    
-    
-
     public GraphGenerator()
     {
-        
-
         GenerateGraph();
     }
 
@@ -61,11 +55,6 @@ public class GraphGenerator
         }
     }
 
-    //private Vector2D gameObjectToVector2D(GameObject obj)
-    //{
-        
-    //}
-
     private bool DoesRoadHaveNode(GameObject obj)
     {
         Vector2D position = new Vector2D(obj.transform.position);
@@ -74,7 +63,6 @@ public class GraphGenerator
 
     public bool HasEdge(GameObject a, GameObject b)
     {
-        //return _hasEdge(a, b) || _hasEdge(b, a);
         Vector2D positionA = new Vector2D(a.transform.position);
         Vector2D positionB = new Vector2D(b.transform.position);
         return HasEdge(positionA, positionB);
@@ -82,10 +70,8 @@ public class GraphGenerator
 
     public bool HasEdge(Vector2D positionA, Vector2D positionB)
     {
-
         return Graph.Nodes.Any(edge => edge.Key.Equals(positionA)  && edge.Value.Adjacent.Any(x => x.Destination.Value.Equals(positionB)));
     }
-
 
     private bool PlaceRoadNode(GameObject to, GameObject from)
     {
@@ -135,8 +121,4 @@ public class GraphGenerator
         array[1] = pos + sp.bounds.max;
         return array;
     }
-
-
-    
-    
 }

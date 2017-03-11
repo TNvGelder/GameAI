@@ -87,6 +87,14 @@
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\PathFindingStrategies\PathFindingStrategy.cs" />
     <Compile Include="Assets\Scripts\DataStructures\Matrix.cs" />
     <Compile Include="Assets\Scripts\DataStructures\PriorityQueue\BinaryHeap.cs" />
+    <Compile Include="Assets\Scripts\Goals\Goal.cs" />
+    <Compile Include="Assets\Scripts\Goals\GoalComposite.cs" />
+    <Compile Include="Assets\Scripts\Goals\Message.cs" />
+    <Compile Include="Assets\Scripts\Goals\Think.cs" />
+    <Compile Include="Assets\Scripts\Goals\TraverseEdge.cs" />
+    <Compile Include="Assets\Scripts\Goals\MoveToPosition.cs" />
+    <Compile Include="Assets\Scripts\Goals\DummyGoal.cs" />
+    <Compile Include="Assets\Scripts\Goals\VisitShop.cs" />
     <Compile Include="Assets\Scripts\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\MovingEntity.cs" />
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
@@ -99,6 +107,7 @@
     <Compile Include="Assets\Scripts\SteeringBehaviours\ICombinedSteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ISteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\ObstacleAvoidanceBehavior.cs" />
+    <Compile Include="Assets\Scripts\SteeringBehaviours\ArriveBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SeekMovingEntityBehaviour.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\SteeringBehaviour.cs" />

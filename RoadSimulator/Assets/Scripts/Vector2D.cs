@@ -75,20 +75,20 @@ namespace Assets.Scripts
 
         public bool Equals(Vector2D other)
         {
-            return (nearlyEqual(X,other.X) && nearlyEqual(Y,other.Y));
+            return (nearlyEqual(X, other.X) && nearlyEqual(Y, other.Y));
         }
 
         private bool nearlyEqual(float a, float b)
         {
             float diff = Math.Abs(a - b);
             return a == b || diff < 0.01f;
-           
+
         }
 
         public override int GetHashCode()
         {
-            int result = (int) X;
-            result = 31 * result +  (int) Y;
+            int result = (int)X;
+            result = 31 * result + (int)Y;
             return result;
         }
 
@@ -120,6 +120,14 @@ namespace Assets.Scripts
         public Vector2D Perp()
         {
             return new Vector2D(-Y, X);
+        }
+
+        public double Vec2DDistanceSq(Vector2D v2)
+        {
+            double ySeparation = v2.Y - this.Y;
+            double xSeparation = v2.X - this.X;
+
+            return ySeparation * ySeparation + xSeparation * xSeparation;
         }
     }
 }

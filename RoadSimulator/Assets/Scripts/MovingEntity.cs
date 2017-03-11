@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.DataStructures;
+using Assets.Scripts.Goals;
 using Assets.Scripts.SteeringBehaviours;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace Assets.Scripts
         public float BRadius { get; set; }
         private PathPlanner pathPlanner;
         public PathPlanner PathPlanner { get { return pathPlanner; } }
+        public GoalComposite Think { get; set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
@@ -48,9 +50,12 @@ namespace Assets.Scripts
                 Heading = new Vector2D();
 
             Tagged = true;
+
+            Think = new Think(this);
+            Think.Activate();
         }
 
-        public void removeBehaviour(Type behaviourType)
+        public void RemoveBehaviour(Type behaviourType)
         {
             for (int i = 0; i < steeringBehaviours.Count; i++)
             {
@@ -64,6 +69,8 @@ namespace Assets.Scripts
 
         public override void Update(float timeElapsed)
         {
+            Think.Process();
+
             if (steeringBehaviours.Count == 0)
             {
                 return;
@@ -135,6 +142,13 @@ namespace Assets.Scripts
         public float Speed()
         {
             return Velocity.Length();
+        }
+
+        public bool IsAtPosition(Vector2D pos)
+        {
+            var tolerance = 10f;
+
+            return this.Pos.Vec2DDistanceSq(pos) < tolerance * tolerance;
         }
 
         public override string ToString()

@@ -13,7 +13,6 @@ namespace Assets.Scripts.SteeringBehaviours
         public Explore(MovingEntity me) : base(me)
         {
             rnd = new Random();
-            
         }
 
 

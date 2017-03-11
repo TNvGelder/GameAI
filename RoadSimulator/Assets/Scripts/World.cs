@@ -1,10 +1,12 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Goals;
 using Assets.Scripts.SteeringBehaviours;
 using DataStructures.GraphStructure;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class World : MonoBehaviour {
 
@@ -13,6 +15,8 @@ public class World : MonoBehaviour {
     public List<GameObject> CarObjects;
     public float Width { get; set; }
     public float Height { get; set; }
+    public bool DisplayGraph { get; set; }
+    public bool DisplayGoals { get; set; }
     public int MinDetectionBoxLength { get; internal set; }
     public static World instance;
     public static World Instance { get { return instance; } }
@@ -21,13 +25,10 @@ public class World : MonoBehaviour {
     public Graph<Vector2D> Graph { get { return graph; } }
     private GraphGenerator graphGenerator;
     public GUIStyle NodeGUIStyle;
+    public GUIStyle GoalListStyle;
     public Color Color = new Color(255, 255, 255);
-    public Material mat;
 
     public Car player;
-    private Explore playerExplore;
-    private FollowPathBehaviour followPath;
-    public Car Target;
 
     // Use this for initialization
     void Start() {
@@ -38,6 +39,9 @@ public class World : MonoBehaviour {
         Height = cam.orthographicSize * 2;
         Width = Height * Screen.width / Screen.height;
         MinDetectionBoxLength = 5;
+
+        GoalListStyle = new GUIStyle();
+        DisplayGoals = true;
 
         GameObject carGameObjects = GameObject.Find("Cars");
         foreach (Transform child in carGameObjects.transform)//Gets direct children of cars
@@ -52,23 +56,24 @@ public class World : MonoBehaviour {
             car.BRadius = car.Size.Y;
             cars.Add(car);
             entities.Add(car);
-            car.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(car));
         }
-        if (cars.Count > 1)
-        {
-            player = cars[0];
-            playerExplore = new Explore(player);
-            followPath = new FollowPathBehaviour(player);
-            player.SteeringBehaviours.Add(playerExplore);
-            player.SteeringBehaviours.Add(followPath);
-            player.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
-            for (int i = 1; i < cars.Count; i++)
-            {
-                Car car = cars[i];
-                car.SteeringBehaviours.Add(new Explore(car));
-                //car.SteeringBehaviours.Add(new SeekMovingEntityBehaviour(car, Target));
-            }
-        }
+
+        player = cars[0];
+
+        //if (cars.Count > 1)
+        //{
+        //    player = cars[0];
+        //    playerExplore = new Explore(player);
+        //    followPath = new FollowPathBehaviour(player);
+        //    player.SteeringBehaviours.Add(playerExplore);
+        //    player.SteeringBehaviours.Add(followPath);
+        //    player.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
+        //    for (int i = 1; i < cars.Count; i++)
+        //    {
+        //        Car car = cars[i];
+        //        car.SteeringBehaviours.Add(new Explore(car));
+        //    }
+        //}
     }
 
     private void GenerateGraph()
@@ -95,19 +100,15 @@ public class World : MonoBehaviour {
         }
         if (Input.GetKeyDown("g"))
         {
-            graphGenerator.Display = !graphGenerator.Display;
+            DisplayGraph = !DisplayGraph;
         }
-	    if (Input.GetMouseButtonDown(0))
-	    {
+        if (Input.GetMouseButtonDown(0))
+        {
             Vector3 endPoint = Input.mousePosition;
             endPoint.z = 0f;
             endPoint = Camera.main.ScreenToWorldPoint(endPoint);
-            player.CombinedSteeringBehavior.DisableBehaviour(typeof(Explore));
-            player.CombinedSteeringBehavior.EnableBehaviour(typeof(FollowPathBehaviour));
-	        LinkedList<Vector2D> waypoints;
-	        player.PathPlanner.CreatePathToPosition(new Vector2D(endPoint), out waypoints);
-            followPath.Path = new Path(waypoints);
-            //player.SteeringBehaviours.Add(new FollowPathBehaviour());
+
+            player.Think.AddSubgoal(new MoveToPosition(player, new Vector2D(endPoint.x, endPoint.y)));
         }
 
         float timeElapsed = Time.fixedDeltaTime;
@@ -119,8 +120,23 @@ public class World : MonoBehaviour {
 
     private void OnGUI()
     {
-        if (!graphGenerator.Display) return;
+        if (DisplayGraph) RenderGraph();
+        if (DisplayGoals) RenderGoals();
+    }
 
+    private void RenderGoals()
+    {
+        foreach (var car in cars)
+        {
+            var text = car.Think.GetDisplayText();
+            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
+            var labelRect = new Rect(screenPos.x - 48, screenPos.y - 23, 100, 50);
+            GUI.Label(labelRect, text, GoalListStyle);
+        }
+    }
+
+    public void RenderGraph()
+    {
         foreach (var node in Graph.Nodes)
         {
             // draw nodes
