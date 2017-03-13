@@ -1,11 +1,18 @@
-﻿using Assets.Scripts.SteeringBehaviours;
+﻿using Assets.Scripts.Goals.ThinkStrategies;
+using Assets.Scripts.SteeringBehaviours;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets.Scripts.Goals
 {
     public class Think : GoalComposite
     {
+        public List<IThinkStrategy> ThinkStrategies = new List<IThinkStrategy>
+        {
+            new FuelStrategy()
+        };
+
         public Think(MovingEntity owner)
         {
             Owner = owner;
@@ -24,52 +31,71 @@ namespace Assets.Scripts.Goals
             base.Activate();
         }
 
+        internal void InsertPriorityGoal(GoalComposite goal, Goal priorityGoal)
+        {
+            goal.Subgoals.Insert(0, priorityGoal);
+            goal.Subgoals[1].Terminate();
+        }
+
         public Goal Determine()
         {
-            var r = World.instance.Random.Next(1000, 2000);
+            if (!IsAnyoneDoing<Seek>())
+            {
+                var entities = World.Instance.entities;
+                MovingEntity target = null;
 
-            if (r < 1500)
+                do
+                {
+                    target = entities[World.instance.Random.Next(0, entities.Count - 1)];
+                } while (target == null || target == Owner);
+
+                return new Seek(Owner, target);
+            } else if (!IsAnyoneDoing<Explore>())
             {
                 return new Explore(Owner);
-            } else
+            }
+            else if (!IsAnyoneDoing<WorkBankGoHome>())
             {
                 return new WorkBankGoHome(Owner);
+            } else
+            {
+                var r = World.instance.Random.Next(1000, 2000);
+                if(r < 1500)
+                {
+                    return new Explore(Owner);
+                } else
+                {
+                    return new WorkBankGoHome(Owner);
+                }
             }
+        }
+
+        public bool IsAnyoneDoing<T>()
+        {
+            return World.instance.entities.Any(x => x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T);
+        }
+
+        public  void SetGoal(Goal goal)
+        {
+            RemoveAllSubgoals();
+            Subgoals.Add(goal);
         }
 
         public void AddMoveToPosition(Vector2D target)
         {
-            RemoveAllSubgoals();
-            Subgoals.Add(new MoveToPosition(Owner, target));
+            SetGoal(new MoveToPosition(Owner, target));
         }
 
         public override Status Process()
         {
             var s = base.Process();
 
+            ThinkStrategies.ForEach(x => x.Evaluate(Owner, this));
+
             if (s == Status.Completed || s == Status.Failed)
             {
                 status = Status.Inactive;
-            }
-
-            if (Owner.Fuel < 30.0 && Subgoals[0].GetType() != typeof(GetFuel))
-            {
-                var goal = new GetFuel(Owner);
-
-                var subGoal = Subgoals[0] as GoalComposite;
-                if (subGoal != null)
-                {
-                    if (subGoal.Subgoals.Any() && !(subGoal.Subgoals[0] is GetFuel))
-                    {
-                        subGoal.Subgoals.Insert(0, goal);
-                    }
-                } else
-                {
-                    RemoveAllSubgoals();
-                    Subgoals.Add(goal);
-                }
-
-                return Status.Active;
+                s = Status.Inactive;
             }
 
             return s;

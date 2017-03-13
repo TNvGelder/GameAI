@@ -6,10 +6,6 @@ namespace Assets.Scripts.Goals
 {
     public class WorkBankGoHome : GoalComposite
     {
-        bool HasWorked = false;
-        bool HasGoneToBank = false;
-        bool HasGoneHome = false;
-
         public FollowPathBehaviour followPath { get; private set; }
 
         public WorkBankGoHome(MovingEntity owner) {
@@ -19,22 +15,9 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            if (!HasWorked)
-            {
-                HasWorked = true;
-                AddSubgoal(GoTo("Work"));
-            } else if (!HasGoneToBank)
-            {
-                HasGoneToBank = true;
-                AddSubgoal(GoTo("Bank"));
-            } else if (!HasGoneHome)
-            {
-                HasGoneHome = true;
-                AddSubgoal(GoTo("Home"));
-            } else
-            {
-                return;
-            }
+            AddSubgoal(GoTo("Work"));
+            AddSubgoal(GoTo("Bank"));
+            AddSubgoal(GoTo("Home"));
 
             base.Activate();
         }

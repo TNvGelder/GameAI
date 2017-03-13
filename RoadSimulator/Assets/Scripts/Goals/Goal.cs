@@ -24,6 +24,7 @@ namespace Assets.Scripts.Goals
         }
         public virtual void Terminate()
         {
+            status = Status.Inactive;
         }
 
         public virtual bool HandleMessage(Message m)

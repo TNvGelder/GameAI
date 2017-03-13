@@ -14,7 +14,8 @@ namespace Assets.Scripts.Goals
 
         public override Status Process()
         {
-            return ProcessSubgoals();
+            status = ProcessSubgoals();
+            return status;
         }
 
         public Status ProcessSubgoals()

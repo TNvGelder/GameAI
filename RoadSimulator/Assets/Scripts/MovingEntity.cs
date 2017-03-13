@@ -30,7 +30,7 @@ namespace Assets.Scripts
             this.pathPlanner = pathPlanner;
             pathPlanner.Me = this;
             Mass = 1;
-            Fuel = MyWorld.Random.Next(70, 100);
+            Fuel = MyWorld.Random.Next(30, 100);
             MaxSpeed = 10;
             BRadius = 2;
             MaxTurnRate = 9999999999999;
@@ -52,7 +52,6 @@ namespace Assets.Scripts
             Tagged = true;
 
             Think = new Think(this);
-            Think.Activate();
         }
 
         public void RemoveBehaviour(Type behaviourType)
