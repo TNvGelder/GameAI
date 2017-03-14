@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BaseGameEntity.cs" />
+    <Compile Include="Assets\Scripts\Bank.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Edge.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\Graph.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\Path.cs" />
     <Compile Include="Assets\Scripts\PathPlanner.cs" />
+    <Compile Include="Assets\Scripts\Building.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\CombinedSteeringBehavior.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\Explore.cs" />
     <Compile Include="Assets\Scripts\SteeringBehaviours\FleeBehaviour.cs" />

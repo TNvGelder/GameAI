@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Goals
 {
-    public class GoalComposite : Goal
+    public abstract class GoalComposite : Goal
     {
         public List<Goal> Subgoals = new List<Goal>();
+        public virtual void OnSubGoalFinish(Goal subgoal) { }
 
         public override void AddSubgoal(Goal g)
         {
@@ -22,8 +23,10 @@ namespace Assets.Scripts.Goals
         {
             while(Subgoals.Count > 0 && (Subgoals[0].IsCompleted() || Subgoals[0].HasFailed()))
             {
+                var s = Subgoals[0];
                 Subgoals[0].Terminate();
                 Subgoals.Remove(Subgoals[0]);
+                OnSubGoalFinish(s);
             }
 
             if (status == Status.Inactive)

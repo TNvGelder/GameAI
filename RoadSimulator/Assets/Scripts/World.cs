@@ -14,6 +14,7 @@ public class World : MonoBehaviour {
     public List<MovingEntity> entities = new List<MovingEntity>();
     public List<Car> cars = new List<Car>();
     public List<GameObject> CarObjects;
+    public Bank Bank { get; set; }
     public float Width { get; set; }
     public float Height { get; set; }
     public bool DisplayIDs { get; set; }
@@ -66,6 +67,9 @@ public class World : MonoBehaviour {
             cars.Add(car);
             entities.Add(car);
         }
+
+        var bank = GameObject.Find("Bank");
+        Bank = new Bank(bank, new Vector2D(bank.transform.position), new Vector2D(bank.GetComponent<SpriteRenderer>().bounds.size));
 
         player = cars[0];
     }
@@ -168,14 +172,24 @@ public class World : MonoBehaviour {
 
     private void RenderStats()
     {
+        Vector3 screenPos;
+        string text;
+        Rect labelRect;
+
         foreach (var car in cars)
         {
-            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
+            screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
             var color = car.Fuel > 30f ? "white" : "red";
-            var text = UI.ColorizeText("Fuel : " + Math.Round(car.Fuel, 2).ToString(), color);
-            var labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
+            text = UI.ColorizeText("Fuel : " + Math.Round(car.Fuel, 2).ToString(), color);
+            labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
             GUI.Label(labelRect, text, GoalListStyle);
         }
+
+        // bank
+        screenPos = Camera.main.WorldToScreenPoint(Bank.Pos.ToVector2());
+        text = UI.ColorizeText("Money: " + Bank.MoneyInBank.ToString(), "white");
+        labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
+        GUI.Label(labelRect, text, GoalListStyle);
     }
 
     private void RenderIDs()

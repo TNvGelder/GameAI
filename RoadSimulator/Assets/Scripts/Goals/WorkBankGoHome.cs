@@ -22,6 +22,17 @@ namespace Assets.Scripts.Goals
             base.Activate();
         }
 
+        public override void OnSubGoalFinish(Goal subgoal)
+        {
+            var goTo = subgoal as MoveToPosition;
+            if (goTo != null)
+            {
+                if (goTo.Name == "Going to Bank") {
+                    World.Instance.Bank.AddMoney(200);
+                }
+            }
+        }
+
         public Goal GoTo(string tag)
         {
             var obj = GameObject.FindGameObjectsWithTag(tag)[0];
