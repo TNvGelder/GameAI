@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -14,6 +15,7 @@ namespace Assets.Scripts
                 return size;
         } }
         public World MyWorld { get; set; }
+        private GUIStyle LabelStyle { get; set; }
 
         public BaseGameEntity(GameObject gameObject, Vector2D pos, Vector2D size)
         {
@@ -22,9 +24,20 @@ namespace Assets.Scripts
             Pos = pos;
             MyWorld = World.Instance;
             this.size = size;
+            LabelStyle = new GUIStyle();
+            LabelStyle.alignment = TextAnchor.UpperLeft;
         }
 
         public abstract void Update(float delta);
+        public virtual void OnGUI() {
+            if (World.Instance.DisplayIDs) RenderID();
+        }
 
+        private void RenderID()
+        {
+            var screenPos = Camera.main.WorldToScreenPoint(Pos.ToVector2());
+            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
+            GUI.Label(labelRect, UI.ColorizeText(ID.ToString(), "white"), LabelStyle);
+        }
     }
 }

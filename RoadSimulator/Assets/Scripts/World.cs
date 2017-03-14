@@ -11,10 +11,8 @@ using System.Linq;
 
 public class World : MonoBehaviour {
 
-    public List<MovingEntity> entities = new List<MovingEntity>();
-    public List<Car> cars = new List<Car>();
+    public List<BaseGameEntity> Entities = new List<BaseGameEntity>();
     public List<GameObject> CarObjects;
-    public Bank Bank { get; set; }
     public float Width { get; set; }
     public float Height { get; set; }
     public bool DisplayIDs { get; set; }
@@ -33,8 +31,6 @@ public class World : MonoBehaviour {
     // styles
     static Material lineMaterial;
     public GUIStyle GraphNodeGUIStyle;
-    public GUIStyle GoalListStyle;
-    public GUIStyle TagGUIStyle;
     public Color GraphColor = new Color(255, 255, 255);
 
     public Car player;
@@ -64,14 +60,17 @@ public class World : MonoBehaviour {
             Vector2D pos = new Vector2D(child.position);
             Car car = new Car(obj, pos, size, new PathPlanner(graph));
             car.BRadius = car.Size.Y;
-            cars.Add(car);
-            entities.Add(car);
+            Entities.Add(car);
+
+            if (player == null)
+            {
+                player = car;
+            }
         }
 
-        var bank = GameObject.Find("Bank");
-        Bank = new Bank(bank, new Vector2D(bank.transform.position), new Vector2D(bank.GetComponent<SpriteRenderer>().bounds.size));
-
-        player = cars[0];
+        var bankObj = GameObject.Find("Bank");
+        var Bank = new Bank(bankObj, new Vector2D(bankObj.transform.position), new Vector2D(bankObj.GetComponent<SpriteRenderer>().bounds.size));
+        Entities.Add(Bank);
     }
 
     private void InitializeStyles()
@@ -90,8 +89,6 @@ public class World : MonoBehaviour {
         GraphNodeGUIStyle.normal.background = tex;
 
         // goal list
-        GoalListStyle = new GUIStyle();
-        GoalListStyle.alignment = TextAnchor.UpperLeft;
 
         // tag
         tex = new Texture2D(2, 2);
@@ -103,8 +100,6 @@ public class World : MonoBehaviour {
             }
         }
         tex.Apply();
-        TagGUIStyle = new GUIStyle();
-        TagGUIStyle.normal.background = tex;
 
         // lines
         // Unity has a built-in shader that is useful for drawing
@@ -138,7 +133,7 @@ public class World : MonoBehaviour {
         }
 
         float timeElapsed = Time.fixedDeltaTime;
-        foreach (MovingEntity me in entities)
+        foreach (MovingEntity me in GetMovingEntities())
         {
             me.Update(timeElapsed);
         }
@@ -165,51 +160,10 @@ public class World : MonoBehaviour {
     private void OnGUI()
     {
         if (DisplayGraph) RenderGraph();
-        if (DisplayGoals) RenderGoals();
-        if (DisplayIDs) RenderIDs();
-        if (DisplayStats) RenderStats();
-    }
 
-    private void RenderStats()
-    {
-        Vector3 screenPos;
-        string text;
-        Rect labelRect;
-
-        foreach (var car in cars)
+        foreach(var entity in Entities)
         {
-            screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var color = car.Fuel > 30f ? "white" : "red";
-            text = UI.ColorizeText("Fuel : " + Math.Round(car.Fuel, 2).ToString(), color);
-            labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
-            GUI.Label(labelRect, text, GoalListStyle);
-        }
-
-        // bank
-        screenPos = Camera.main.WorldToScreenPoint(Bank.Pos.ToVector2());
-        text = UI.ColorizeText("Money: " + Bank.MoneyInBank.ToString(), "white");
-        labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
-        GUI.Label(labelRect, text, GoalListStyle);
-    }
-
-    private void RenderIDs()
-    {
-        foreach (var car in cars)
-        {
-            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y - 10, 100, 50);
-            GUI.Label(labelRect, UI.ColorizeText(car.ID.ToString(), "white"), GoalListStyle);
-        }
-    }
-
-    private void RenderGoals()
-    {
-        foreach (var car in cars)
-        {
-            var screenPos = Camera.main.WorldToScreenPoint(car.Pos.ToVector2());
-            var text = car.Think.GetDisplayText();
-            var labelRect = new Rect(screenPos.x, Screen.height - screenPos.y, 100, 50);
-            GUI.Label(labelRect, text, GoalListStyle);
+            entity.OnGUI();
         }
     }
 
@@ -246,9 +200,20 @@ public class World : MonoBehaviour {
         }
     }
 
+    public List<MovingEntity> GetMovingEntities()
+    {
+        //var movingEntities = Entities.Where(x => x.GetType() == typeof(MovingEntity));
+        return Entities.Where(x => x is MovingEntity).Cast<MovingEntity>().ToList<MovingEntity>();
+    }
+
+    public T GetEntity<T>() where T : BaseGameEntity
+    {
+        return (T)Entities.FirstOrDefault(x => x is T);
+    }
+
     public void TagObstaclesWithinViewRange(MovingEntity entity, double range)
     {
-        TagNeighbors(entity, entities, range);
+        TagNeighbors(entity, GetMovingEntities(), range);
     }
 
     public void TagNeighbors(MovingEntity entity, List<MovingEntity> obstacles, double radius)

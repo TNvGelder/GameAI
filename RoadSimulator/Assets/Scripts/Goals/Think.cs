@@ -41,7 +41,7 @@ namespace Assets.Scripts.Goals
         {
             if (!IsAnyoneDoing<Seek>())
             {
-                var entities = World.Instance.entities;
+                var entities = World.Instance.GetMovingEntities();
                 MovingEntity target = null;
 
                 do
@@ -69,10 +69,10 @@ namespace Assets.Scripts.Goals
                 }
             }
         }
-
+        
         public bool IsAnyoneDoing<T>()
         {
-            return World.instance.entities.Any(x => x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T);
+            return World.Instance.GetMovingEntities().Any(x => x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T);
         }
 
         public  void SetGoal(Goal goal)

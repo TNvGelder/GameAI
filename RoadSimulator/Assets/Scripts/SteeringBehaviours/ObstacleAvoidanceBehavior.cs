@@ -26,7 +26,7 @@ namespace Assets.Scripts.SteeringBehaviours
 
             Vector2D LocalPosOfClosestObstacle = null;
 
-            foreach (var cur in world.entities)
+            foreach (var cur in world.GetMovingEntities())
             {
                 if (cur.Tagged)
                 {

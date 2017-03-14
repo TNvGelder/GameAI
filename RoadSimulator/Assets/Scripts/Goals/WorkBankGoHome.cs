@@ -28,7 +28,7 @@ namespace Assets.Scripts.Goals
             if (goTo != null)
             {
                 if (goTo.Name == "Going to Bank") {
-                    World.Instance.Bank.AddMoney(200);
+                    World.Instance.GetEntity<Bank>().AddMoney(200);
                 }
             }
         }
