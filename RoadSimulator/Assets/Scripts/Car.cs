@@ -8,6 +8,7 @@ namespace Assets.Scripts
 
         public Car(GameObject obj, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(obj, pos, size , pathPlanner)
         {
+            BRadius = Size.Y;
             GoalListStyle = new GUIStyle();
             GoalListStyle.alignment = TextAnchor.UpperLeft;
             MaxSpeed = 3;

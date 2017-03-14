@@ -38,7 +38,6 @@ public class World : MonoBehaviour {
     // Use this for initialization
     void Start() {
         instance = this;
-        GenerateGraph();
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         //Makes it so that the worldsize is the size of the camera
         Height = cam.orthographicSize * 2;
@@ -47,8 +46,13 @@ public class World : MonoBehaviour {
 
         DisplayStats = true;
 
+        GenerateGraph();
         InitializeStyles();
+        CreateEntities();
+    }
 
+    private void CreateEntities()
+    {
         GameObject carGameObjects = GameObject.Find("Cars");
         foreach (Transform child in carGameObjects.transform)//Gets direct children of cars
         {
@@ -59,7 +63,6 @@ public class World : MonoBehaviour {
             Vector2D size = new Vector2D(spriteRenderer.bounds.size);
             Vector2D pos = new Vector2D(child.position);
             Car car = new Car(obj, pos, size, new PathPlanner(graph));
-            car.BRadius = car.Size.Y;
             Entities.Add(car);
 
             if (player == null)
@@ -68,9 +71,28 @@ public class World : MonoBehaviour {
             }
         }
 
-        var bankObj = GameObject.Find("Bank");
-        var Bank = new Bank(bankObj, new Vector2D(bankObj.transform.position), new Vector2D(bankObj.GetComponent<SpriteRenderer>().bounds.size));
-        Entities.Add(Bank);
+        CreateEntityForObject<Bank>(GameObject.Find("Bank"));
+        CreateEntityForObject<Work>(GameObject.Find("Work"));
+        CreateEntityForObjects<GasStation>(GameObject.FindGameObjectsWithTag("GasStation"));
+    }
+
+    private void CreateEntityForObjects<T>(GameObject[] gameObjects) where T : BaseGameEntity
+    {
+        foreach(var obj in gameObjects)
+        {
+            CreateEntityForObject<T>(obj);
+        }
+    }
+
+    private void CreateEntityForObject<T>(GameObject obj) where T :  BaseGameEntity
+    {
+        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+
+        Vector2D size = new Vector2D(spriteRenderer.bounds.size);
+        Vector2D pos = new Vector2D(obj.transform.position);
+        T entity = Activator.CreateInstance(typeof(T),
+                  new object[] { obj, pos, size }) as T;
+        Entities.Add(entity);
     }
 
     private void InitializeStyles()
@@ -87,19 +109,6 @@ public class World : MonoBehaviour {
         tex.Apply();
         GraphNodeGUIStyle = new GUIStyle();
         GraphNodeGUIStyle.normal.background = tex;
-
-        // goal list
-
-        // tag
-        tex = new Texture2D(2, 2);
-        for (int i = 0; i < tex.width; i++)
-        {
-            for (int j = 0; j < tex.height; j++)
-            {
-                tex.SetPixel(i, j, new Color(255, 255, 0));
-            }
-        }
-        tex.Apply();
 
         // lines
         // Unity has a built-in shader that is useful for drawing
