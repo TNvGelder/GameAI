@@ -12,7 +12,7 @@ namespace Assets.Scripts
         {
             StatsStyle = new GUIStyle();
             StatsStyle.alignment = TextAnchor.UpperLeft;
-            MoneyInBank = 0;
+            MoneyInBank = 1000;
         }
 
         internal void AddMoney(int v)
@@ -33,6 +33,11 @@ namespace Assets.Scripts
             var text = UI.ColorizeText("Money: " + MoneyInBank.ToString(), "white");
             var labelRect = new Rect(screenPos.x - 80, Screen.height - screenPos.y - 30, 100, 50);
             GUI.Label(labelRect, text, StatsStyle);
+        }
+
+        public void GetRobbed()
+        {
+            MoneyInBank = 0;
         }
     }
 }

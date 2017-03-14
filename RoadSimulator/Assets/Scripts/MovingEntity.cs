@@ -22,8 +22,9 @@ namespace Assets.Scripts
         public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
         private PathPlanner pathPlanner;
         public PathPlanner PathPlanner { get { return pathPlanner; } }
-        public GoalComposite Think { get; set; }
+        public Think Think { get; set; }
         public float Fuel { get; internal set; }
+        public bool IsCop { get; internal set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
@@ -36,6 +37,11 @@ namespace Assets.Scripts
             MaxTurnRate = 9999999999999;
             steeringBehaviours = new List<ISteeringBehavior>();
             CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
+
+            if (gameObject.name == "Police")
+            {
+                IsCop = true;
+            }
 
             if (Velocity == null)
                 Velocity = new Vector2D();

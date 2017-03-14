@@ -5,12 +5,12 @@ namespace Assets.Scripts.Goals
 {
     public class Seek : Goal
     {
-        private MovingEntity Target;
+        public MovingEntity Target;
 
-        public Seek(MovingEntity owner, MovingEntity target) {
+        public Seek(MovingEntity owner, MovingEntity target, string name = "Seek") {
             Owner = owner;
             Target = target;
-            Name = "Seek";
+            Name = name;
         }
 
         public float OriginalSpeed { get; private set; }
@@ -18,7 +18,7 @@ namespace Assets.Scripts.Goals
         public override void Activate()
         {
             OriginalSpeed = Owner.MaxSpeed;
-            Owner.MaxSpeed = (float)(Target.MaxSpeed - (Target.MaxSpeed * 0.1));
+            Owner.MaxSpeed = (float)(Target.MaxSpeed * 0.9);
             Owner.SteeringBehaviours.Add(new Scripts.SteeringBehaviours.SeekMovingEntityBehaviour(Owner, Target));
 
             base.Activate();

@@ -78,6 +78,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GasStation.cs" />
+    <Compile Include="Assets\Scripts\Goals\CatchRobber.cs" />
+    <Compile Include="Assets\Scripts\Goals\Patrol.cs" />
+    <Compile Include="Assets\Scripts\Goals\RobBank.cs" />
     <Compile Include="Assets\Scripts\Work.cs" />
     <Compile Include="Assets\Scripts\Shop.cs" />
     <Compile Include="Assets\Scripts\BaseGameEntity.cs" />

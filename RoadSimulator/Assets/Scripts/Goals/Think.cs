@@ -39,7 +39,11 @@ namespace Assets.Scripts.Goals
 
         public Goal Determine()
         {
-            if (!IsAnyoneDoing<Seek>())
+            if (Owner.IsCop)
+            {
+                return new Patrol(Owner);
+            }
+            else if (!IsAnyoneDoing<Seek>())
             {
                 var entities = World.Instance.GetMovingEntities();
                 MovingEntity target = null;
@@ -57,7 +61,12 @@ namespace Assets.Scripts.Goals
             else if (!IsAnyoneDoing<WorkBankGoHome>())
             {
                 return new WorkBankGoHome(Owner);
-            } else
+            }
+            else if (!IsAnyoneDoing<RobBank>() && !Owner.IsCop)
+            {
+                return new RobBank(Owner);
+            }
+            else
             {
                 var r = World.instance.Random.Next(1000, 2000);
                 if(r < 1500)
