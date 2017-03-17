@@ -60,6 +60,18 @@ namespace Assets.Scripts
             Think = new Think(this);
         }
 
+        //public void GetBehaviour(Type behaviourType)
+        //{
+            
+        //    for (int i = 0; i < steeringBehaviours.Count; i++)
+        //    {
+        //        if (steeringBehaviours[i].GetType() == behaviourType)
+        //        {
+        //            return steeringBehaviours[i];
+        //        }
+        //    }
+        //}
+
         public void RemoveBehaviour(Type behaviourType)
         {
             for (int i = 0; i < steeringBehaviours.Count; i++)

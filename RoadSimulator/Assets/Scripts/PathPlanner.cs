@@ -64,6 +64,10 @@ namespace Assets.Scripts
             if (closestNodeToMe != null && closestNodeToTarget != null)
             {
                 path = graph.GetPath(closestNodeToMe.Value, closestNodeToTarget.Value);
+                if (path.Count > 0)
+                {
+                    path.AddLast(TargetPos);
+                }
                 return (path.Count > 0);
 
             }

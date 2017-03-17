@@ -32,6 +32,7 @@ public class World : MonoBehaviour {
     static Material lineMaterial;
     public GUIStyle GraphNodeGUIStyle;
     public Color GraphColor = new Color(255, 255, 255);
+    public Color travelingColor = new Color(255, 0, 0);
 
     public Car player;
 
@@ -200,6 +201,11 @@ public class World : MonoBehaviour {
             GL.Color(GraphColor);
             foreach (var edge in node.Value.Adjacent)
             {
+                
+                if (player.CombinedSteeringBehavior.IsEnabled(typeof(FollowPathBehaviour)))
+                {
+                    //player.PathPlanner.
+                }
                 GL.Vertex(new Vector2(pos.X, pos.Y));
                 Vector2D destPos = edge.Destination.Value;
                 GL.Vertex(new Vector2(destPos.X, destPos.Y));

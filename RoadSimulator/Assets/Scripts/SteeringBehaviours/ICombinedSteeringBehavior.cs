@@ -7,5 +7,6 @@ namespace Assets.Scripts.SteeringBehaviours
         Vector2D Calculate();
         void EnableBehaviour(Type behaviour);
         void DisableBehaviour(Type behaviour);
+        bool IsEnabled(Type behaviour);
     }
 }
