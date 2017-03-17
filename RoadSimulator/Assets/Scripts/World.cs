@@ -198,16 +198,26 @@ public class World : MonoBehaviour {
             // draw edges
             GL.PushMatrix();
             GL.Begin(GL.LINES);
-            GL.Color(GraphColor);
+            
             foreach (var edge in node.Value.Adjacent)
             {
-                
+                GL.Color(GraphColor);
+                Vector2D destPos = edge.Destination.Value;
+                int z = 0;
                 if (player.CombinedSteeringBehavior.IsEnabled(typeof(FollowPathBehaviour)))
                 {
-                    //player.PathPlanner.
+                    FollowPathBehaviour behaviour = (FollowPathBehaviour) player.GetBehaviour(typeof(FollowPathBehaviour));
+                    if (behaviour != null)
+                    {
+                        LinkedList<Vector2D> wayPoints = behaviour.Path.WayPoints;
+                        if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
+                        {
+                            GL.Color(travelingColor);
+                        }
+                        
+                    }
                 }
                 GL.Vertex(new Vector2(pos.X, pos.Y));
-                Vector2D destPos = edge.Destination.Value;
                 GL.Vertex(new Vector2(destPos.X, destPos.Y));
             }
             GL.End();

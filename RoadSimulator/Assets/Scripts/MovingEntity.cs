@@ -60,17 +60,18 @@ namespace Assets.Scripts
             Think = new Think(this);
         }
 
-        //public void GetBehaviour(Type behaviourType)
-        //{
-            
-        //    for (int i = 0; i < steeringBehaviours.Count; i++)
-        //    {
-        //        if (steeringBehaviours[i].GetType() == behaviourType)
-        //        {
-        //            return steeringBehaviours[i];
-        //        }
-        //    }
-        //}
+        public ISteeringBehavior GetBehaviour(Type behaviourType)
+        {
+
+            for (int i = 0; i < steeringBehaviours.Count; i++)
+            {
+                if (steeringBehaviours[i].GetType() == behaviourType)
+                {
+                    return steeringBehaviours[i];
+                }
+            }
+            return null;
+        }
 
         public void RemoveBehaviour(Type behaviourType)
         {
@@ -119,7 +120,7 @@ namespace Assets.Scripts
             // only decrease fuel when moving
             if (Velocity.Length() > 0.1)
             {
-                Fuel -= 0.02f;
+                Fuel -= 0.02f * 2/3;
             }
 
             //update the heading if the vehicle has a velocity greater than a very small
