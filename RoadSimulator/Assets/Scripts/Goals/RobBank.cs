@@ -31,9 +31,7 @@ namespace Assets.Scripts.Goals
             {
                 if (goTo.Name == "Rob the bank")
                 {
-                    World.Instance.GetEntity<Bank>().GetRobbed();
-                    var police = World.Instance.GetMovingEntities().FirstOrDefault(x => x.GameObject.name == "Police");
-                    police.Think.SetGoal(new CatchRobber(police, Owner));
+                    World.Instance.GetEntity<Bank>().GetRobbed(Owner);
                 }
             }
         }

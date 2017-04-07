@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts.Goals;
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -35,9 +37,13 @@ namespace Assets.Scripts
             GUI.Label(labelRect, text, StatsStyle);
         }
 
-        public void GetRobbed()
+        public void GetRobbed(MovingEntity robber)
         {
             MoneyInBank = 0;
+            
+            // call the police
+            var police = World.Instance.GetMovingEntities().FirstOrDefault(x => x.GameObject.name == "Police");
+            police.Think.SetGoal(new CatchRobber(police, robber));
         }
     }
 }
