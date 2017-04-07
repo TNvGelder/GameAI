@@ -25,7 +25,7 @@ namespace Assets.Scripts.Goals
 
             if (Subgoals.Count == 0)
             {
-                Subgoals.Add(Determine());
+                AddSubgoal(Determine());
             }
 
             base.Activate();

@@ -16,8 +16,6 @@ namespace Assets.Scripts.Goals
             if (Owner.IsAtPosition(Target.Pos))
             {
                 status = Status.Completed;
-                Target.Think.RemoveAllSubgoals();
-                Target.Think.Activate();
             }
 
             return base.Process();

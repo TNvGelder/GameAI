@@ -15,7 +15,10 @@ namespace Assets.Scripts.Goals
 
         public override Status Process()
         {
+            ActivateIfInactive();
+
             status = ProcessSubgoals();
+
             return status;
         }
 
@@ -24,14 +27,9 @@ namespace Assets.Scripts.Goals
             while(Subgoals.Count > 0 && (Subgoals[0].IsCompleted() || Subgoals[0].HasFailed()))
             {
                 var s = Subgoals[0];
-                Subgoals[0].Terminate();
-                Subgoals.Remove(Subgoals[0]);
+                s.Terminate();
+                Subgoals.Remove(s);
                 OnSubGoalFinish(s);
-            }
-
-            if (status == Status.Inactive)
-            {
-                Activate();
             }
 
             if (Subgoals.Count > 0)
@@ -51,6 +49,11 @@ namespace Assets.Scripts.Goals
 
         public override void Terminate()
         {
+            foreach(var goal in Subgoals)
+            {
+                goal.Terminate();
+            }
+
             base.Terminate();
         }
 
@@ -58,13 +61,6 @@ namespace Assets.Scripts.Goals
         {
             while(Subgoals.Count > 0)
             {
-                var composite = Subgoals[0] as GoalComposite;
-
-                if (composite != null)
-                {
-                    composite.RemoveAllSubgoals();
-                }
-
                 Subgoals[0].Terminate();
                 Subgoals.Remove(Subgoals[0]);
             }

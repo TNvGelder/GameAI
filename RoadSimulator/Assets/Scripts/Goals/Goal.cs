@@ -5,9 +5,17 @@ namespace Assets.Scripts.Goals
     public abstract class Goal
     {
         protected MovingEntity Owner;
-        protected Status status;
+        protected Status status = Status.Inactive;
         protected int type;
         public string Name { get; set; }
+
+        public void ActivateIfInactive()
+        {
+            if (status == Status.Inactive)
+            {
+                Activate();
+            }
+        }
 
         public virtual void Activate()
         {
@@ -15,10 +23,7 @@ namespace Assets.Scripts.Goals
         }
         public virtual Status Process()
         {
-            if (status == Status.Inactive)
-            {
-                Activate();
-            }
+            ActivateIfInactive();
 
             return status;
         }
@@ -34,7 +39,7 @@ namespace Assets.Scripts.Goals
 
         public virtual void AddSubgoal(Goal g)
         {
-
+            throw new Exception("Not possible for atomic goals");
         }
 
         public bool IsActive()
