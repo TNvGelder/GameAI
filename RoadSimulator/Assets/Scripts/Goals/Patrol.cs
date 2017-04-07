@@ -22,18 +22,6 @@ namespace Assets.Scripts.Goals
             base.Activate();
         }
 
-        public override void OnSubGoalFinish(Goal subgoal)
-        {
-            var goTo = subgoal as MoveToPosition;
-            if (goTo != null)
-            {
-                if (goTo.Name == "Rob Bank")
-                {
-                    World.Instance.GetEntity<Bank>().GetRobbed();
-                }
-            }
-        }
-
         public void GoTo(string tag, string text)
         {
             var objects = GameObject.FindGameObjectsWithTag(tag);
