@@ -11,6 +11,7 @@ namespace Assets.Scripts.SteeringBehaviours
         {
             { typeof(ObstacleAvoidanceBehavior), 2f },
             { typeof(FleeBehaviour), 1f },
+            { typeof(SeekBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },
             { typeof(Explore), 1f },
         };
@@ -49,14 +50,15 @@ namespace Assets.Scripts.SteeringBehaviours
                 {
                     weight = weights[behavior.GetType()];
                 }
-                if (!enabled.ContainsKey(type))
-                {
-                    enabled[type] = true;
-                }
-                if (enabled[type])
-                {
-                    SteeringForce += behavior.Calculate() * weight;
-                }
+                //if (!enabled.ContainsKey(type))
+                //{
+                //    enabled[type] = true;
+                //}
+                //if (enabled[type])
+                //{
+                //    SteeringForce += behavior.Calculate() * weight;
+                //}
+                SteeringForce += behavior.Calculate() * weight;
             }
 
             return SteeringForce.Truncate(_entity.MaxSpeed);

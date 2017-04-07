@@ -49,10 +49,22 @@ namespace Assets.Scripts.Goals
             return Status.Completed;
         }
 
+        public override void Terminate()
+        {
+            base.Terminate();
+        }
+
         public void RemoveAllSubgoals()
         {
             while(Subgoals.Count > 0)
             {
+                var composite = Subgoals[0] as GoalComposite;
+
+                if (composite != null)
+                {
+                    composite.RemoveAllSubgoals();
+                }
+
                 Subgoals[0].Terminate();
                 Subgoals.Remove(Subgoals[0]);
             }

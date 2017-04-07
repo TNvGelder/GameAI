@@ -14,10 +14,10 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            GoTo("Bank", "Bank");
             GoTo("GasStation", "GasStation");
             GoTo("Home", "Home");
             GoTo("Work", "Work");
+            GoTo("Bank", "Bank");
 
             base.Activate();
         }

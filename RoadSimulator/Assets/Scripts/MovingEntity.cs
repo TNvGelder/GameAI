@@ -175,7 +175,7 @@ namespace Assets.Scripts
 
         public bool IsAtPosition(Vector2D pos)
         {
-            var tolerance = 8f;
+            var tolerance = 4f;
 
             return this.Pos.Vec2DDistanceSq(pos) < tolerance * tolerance;
         }

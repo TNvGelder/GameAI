@@ -160,8 +160,8 @@ public class World : MonoBehaviour {
         endPoint.z = 0f;
         endPoint = Camera.main.ScreenToWorldPoint(endPoint);
 
-        var mask = (SpriteRenderer)GameObject.Find("ClickMask").GetComponent("SpriteRenderer");
-        if (!mask.bounds.Contains(endPoint))
+        var mask = (RectTransform)GameObject.Find("ClickMask").GetComponent("RectTransform");
+        if (!RectTransformUtility.RectangleContainsScreenPoint(mask, endPoint, GetComponent<Camera>()))
         {
             ((Think)player.Think).AddMoveToPosition(new Vector2D(endPoint.x, endPoint.y));
         }
@@ -179,6 +179,8 @@ public class World : MonoBehaviour {
 
     public void RenderGraph()
     {
+        if (Graph == null) return;
+
         foreach (var node in Graph.Nodes)
         {
             // draw nodes
@@ -204,19 +206,18 @@ public class World : MonoBehaviour {
                 GL.Color(GraphColor);
                 Vector2D destPos = edge.Destination.Value;
                 int z = 0;
-                if (player.CombinedSteeringBehavior.IsEnabled(typeof(FollowPathBehaviour)))
+
+                FollowPathBehaviour behaviour = (FollowPathBehaviour)player.GetBehaviour(typeof(FollowPathBehaviour));
+                if (behaviour != null)
                 {
-                    FollowPathBehaviour behaviour = (FollowPathBehaviour) player.GetBehaviour(typeof(FollowPathBehaviour));
-                    if (behaviour != null)
+                    LinkedList<Vector2D> wayPoints = behaviour.Path.WayPoints;
+                    if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
                     {
-                        LinkedList<Vector2D> wayPoints = behaviour.Path.WayPoints;
-                        if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
-                        {
-                            GL.Color(travelingColor);
-                        }
-                        
+                        GL.Color(travelingColor);
                     }
+
                 }
+
                 GL.Vertex(new Vector2(pos.X, pos.Y));
                 GL.Vertex(new Vector2(destPos.X, destPos.Y));
             }
@@ -227,8 +228,7 @@ public class World : MonoBehaviour {
 
     public List<MovingEntity> GetMovingEntities()
     {
-        //var movingEntities = Entities.Where(x => x.GetType() == typeof(MovingEntity));
-        return Entities.Where(x => x is MovingEntity).Cast<MovingEntity>().ToList<MovingEntity>();
+        return Entities.Where(x => x is MovingEntity).Cast<MovingEntity>().ToList();
     }
 
     public T GetEntity<T>() where T : BaseGameEntity

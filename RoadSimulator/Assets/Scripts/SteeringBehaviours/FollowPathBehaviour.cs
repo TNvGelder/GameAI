@@ -25,8 +25,8 @@ namespace Assets.Scripts.SteeringBehaviours
                 else
                 {
                     Path.Finished = true;
-                    ME.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
-                    ME.CombinedSteeringBehavior.EnableBehaviour(typeof(Explore));
+                    //ME.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
+                    //ME.CombinedSteeringBehavior.EnableBehaviour(typeof(Explore));
                 }
                 
             }else if (Path.WayPoints.Count > 0)
