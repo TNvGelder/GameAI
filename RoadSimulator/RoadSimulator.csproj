@@ -77,6 +77,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyModule.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyRule.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzySet.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzySet_LeftShoulder.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzySet_RightShoulder.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzySet_Singleton.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzySet_Triangle.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FuzzyTerm.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FzAND.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FzOR.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FzSet.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FzFairly.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyTerms\FzVery.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyVariable.cs" />
     <Compile Include="Assets\Scripts\GasStation.cs" />
     <Compile Include="Assets\Scripts\Goals\CatchRobber.cs" />
     <Compile Include="Assets\Scripts\Goals\Patrol.cs" />
@@ -127,6 +141,7 @@
     <Compile Include="Assets\Scripts\Vector2D.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>
