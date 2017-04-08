@@ -21,7 +21,7 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            //Owner.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(Owner));
+            Owner.SteeringBehaviours.Add(new ObstacleAvoidanceBehavior(Owner));
 
             if (Subgoals.Count == 0)
             {

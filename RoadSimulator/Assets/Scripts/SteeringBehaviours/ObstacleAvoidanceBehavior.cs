@@ -82,7 +82,7 @@ namespace Assets.Scripts.SteeringBehaviours
             {
                 //the closer the agent is to an object, the stronger the 
                 //steering force should be
-                double multiplier = 1.0 + (m_dDBoxLength - LocalPosOfClosestObstacle.X) /
+                double multiplier = 5.0 + (m_dDBoxLength - LocalPosOfClosestObstacle.X) /
                                     m_dDBoxLength;
 
 
@@ -92,7 +92,7 @@ namespace Assets.Scripts.SteeringBehaviours
 
                 //apply a braking force proportional to the obstacles distance from
                 //the vehicle. 
-                const double BrakingWeight = 0.2;
+                const double BrakingWeight = 2;
 
                 SteeringForce.X = (float)((ClosestIntersectingObstacle.BRadius -
                                    LocalPosOfClosestObstacle.X) *

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class MovingEntity : BaseGameEntity
+    public abstract class MovingEntity : BaseGameEntity
     {
         public Vector2D Velocity { get; set; }
         public float Mass { get; set; }

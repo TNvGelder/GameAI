@@ -245,9 +245,9 @@ public class World : MonoBehaviour {
     {
         foreach(var e in obstacles)
         {
-            if (entity.Equals(e)) continue;
-
             e.Tagged = false;
+
+            if (entity.ID.Equals(e.ID)) continue;
 
             var to = e.Pos - entity.Pos;
 
