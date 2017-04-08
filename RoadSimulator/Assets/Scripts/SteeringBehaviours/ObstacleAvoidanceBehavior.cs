@@ -6,17 +6,19 @@ namespace Assets.Scripts.SteeringBehaviours
 {
     public class ObstacleAvoidanceBehavior : SteeringBehaviour
     {
+        private const int MinDetectionBoxLength = 5;
+
         public ObstacleAvoidanceBehavior(MovingEntity me) : base(me)
         {
         }
 
         public override Vector2D Calculate()
         {
-            var world = this.ME.MyWorld;
+            var world = ME.MyWorld;
 
-            var m_dDBoxLength = world.MinDetectionBoxLength +
-                  (this.ME.Speed() / this.ME.MaxSpeed) *
-                  world.MinDetectionBoxLength;
+            var m_dDBoxLength = MinDetectionBoxLength +
+                  (ME.Speed() / ME.MaxSpeed) *
+                  MinDetectionBoxLength;
 
             world.TagObstaclesWithinViewRange(ME, m_dDBoxLength);
 

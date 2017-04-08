@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Assets.Scripts.SteeringBehaviours
 {
@@ -13,7 +12,7 @@ namespace Assets.Scripts.SteeringBehaviours
             { typeof(FleeBehaviour), 1f },
             { typeof(SeekBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },
-            { typeof(Explore), 1f },
+            { typeof(ExploreBehavior), 1f },
         };
 
         private Dictionary<Type, bool> enabled = new Dictionary<Type, bool>();
@@ -45,19 +44,14 @@ namespace Assets.Scripts.SteeringBehaviours
             foreach(var behavior in _entity.SteeringBehaviours)
             {
                 Type type = behavior.GetType();
+
                 float weight = 1.0f;
+
                 if (weights.ContainsKey(type))
                 {
                     weight = weights[behavior.GetType()];
                 }
-                //if (!enabled.ContainsKey(type))
-                //{
-                //    enabled[type] = true;
-                //}
-                //if (enabled[type])
-                //{
-                //    SteeringForce += behavior.Calculate() * weight;
-                //}
+
                 SteeringForce += behavior.Calculate() * weight;
             }
 

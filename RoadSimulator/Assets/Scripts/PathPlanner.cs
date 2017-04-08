@@ -8,13 +8,12 @@ namespace Assets.Scripts
 {
     public class PathPlanner
     {
-        public Graph<Vector2D> graph;
-        public Graph<Vector2D> Graph { get { return graph; } }
+        public Graph<Vector2D> Graph { get; internal set; }
         public MovingEntity Me;
 
         public PathPlanner(Graph<Vector2D> graph)
         {
-            this.graph = graph;
+            Graph = graph;
         }
 
         public Vector2D GetClosestNodePosToPosition(Vector2D pos)
@@ -23,7 +22,7 @@ namespace Assets.Scripts
             if (node != null)
             {
                 return node.Value;
-            }else
+            } else
             {
                 return null;
             }
@@ -38,7 +37,7 @@ namespace Assets.Scripts
             float closestSoFar = float.MaxValue;
             Vector2D closestNodePos = null;
 
-            foreach (Vector2D nodePos in graph.Nodes.Keys)
+            foreach (Vector2D nodePos in Graph.Nodes.Keys)
             {
                 float distance = (pos - nodePos).LengthSquared();
                 if (distance < closestSoFar && Me.CanWalkBetween(pos, nodePos))
@@ -50,7 +49,7 @@ namespace Assets.Scripts
 
             if (closestNodePos != null)
             {
-                return graph.Nodes[closestNodePos];
+                return Graph.Nodes[closestNodePos];
             }
             return null;
         }
@@ -63,7 +62,7 @@ namespace Assets.Scripts
             GraphNode<Vector2D> closestNodeToTarget = GetClosestNodeToPosition(TargetPos);
             if (closestNodeToMe != null && closestNodeToTarget != null)
             {
-                path = graph.GetPath(closestNodeToMe.Value, closestNodeToTarget.Value);
+                path = Graph.GetPath(closestNodeToMe.Value, closestNodeToTarget.Value);
                 if (path.Count > 0)
                 {
                     path.AddLast(TargetPos);

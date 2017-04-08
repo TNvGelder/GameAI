@@ -13,14 +13,14 @@ namespace DataStructures.GraphStructure
     /// <typeparam name="T"></typeparam>
     public class Graph<T>
     {
-        private Dictionary<T, GraphNode<T>> nodes = new Dictionary<T, GraphNode<T>>();
-        public Dictionary<T, GraphNode<T>> Nodes { get { return nodes; } }
+        public Dictionary<T, GraphNode<T>> Nodes { get; protected set; }
 
         public PathFindingStrategy<T> PathFindingStrategy { get; set; }
 
         public Graph()
         {
             PathFindingStrategy =  new DijkstraStrategy<T>(this);
+            Nodes = new Dictionary<T, GraphNode<T>>();
         }
 
         //Adds an edge between two nodes with the given cost.

@@ -12,7 +12,6 @@ using System.Linq;
 public class World : MonoBehaviour {
 
     public List<BaseGameEntity> Entities = new List<BaseGameEntity>();
-    public List<GameObject> CarObjects;
     public float Width { get; set; }
     public float Height { get; set; }
     public bool DisplayIDs { get; set; }
@@ -20,10 +19,9 @@ public class World : MonoBehaviour {
     public bool DisplayGoals { get; set; }
     public bool DisplayStats { get; set; }
     public System.Random Random = new System.Random();
-    public int MinDetectionBoxLength { get; internal set; }
-    public static World instance;
-    public static World Instance { get { return instance; } }
+    public static World Instance { get; internal set; }
 
+    // graph
     private Graph<Vector2D> graph;
     public Graph<Vector2D> Graph { get { return graph; } }
     private GraphGenerator graphGenerator;
@@ -32,23 +30,26 @@ public class World : MonoBehaviour {
     static Material lineMaterial;
     public GUIStyle GraphNodeGUIStyle;
     public Color GraphColor = new Color(255, 255, 255);
-    public Color travelingColor = new Color(255, 0, 0);
+    public Color GraphTravelingColor = new Color(255, 0, 0);
 
     public Car player;
 
-    // Use this for initialization
+    // Unity calls this function on startup, so we can do initialization logic here
     void Start() {
-        instance = this;
+        Instance = this;
+
+        // Make it so that the worldsize is the size of the camera
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        //Makes it so that the worldsize is the size of the camera
         Height = cam.orthographicSize * 2;
         Width = Height * Screen.width / Screen.height;
-        MinDetectionBoxLength = 5;
 
         DisplayStats = true;
 
         GenerateGraph();
+
+        // initialize styles only once at startup, to improve rendering speed significantly
         InitializeStyles();
+
         CreateEntities();
     }
 
@@ -111,7 +112,6 @@ public class World : MonoBehaviour {
         GraphNodeGUIStyle = new GUIStyle();
         GraphNodeGUIStyle.normal.background = tex;
 
-        // lines
         // Unity has a built-in shader that is useful for drawing
         // simple colored things.
         Shader shader = Shader.Find("Hidden/Internal-Colored");
@@ -137,6 +137,7 @@ public class World : MonoBehaviour {
         {
             Reload();
         }
+
         if (Input.GetMouseButtonDown(0))
         {
             HandleClick();
@@ -160,10 +161,13 @@ public class World : MonoBehaviour {
         endPoint.z = 0f;
         endPoint = Camera.main.ScreenToWorldPoint(endPoint);
 
+        // don't register clicks inside the clickmask.
+        // the clickmask is the area behind the checkboxes in the topleft corner of the simulation
+        // when clicking checkboxes we don't want the car to move there
         var mask = (RectTransform)GameObject.Find("ClickMask").GetComponent("RectTransform");
         if (!RectTransformUtility.RectangleContainsScreenPoint(mask, endPoint, GetComponent<Camera>()))
         {
-            ((Think)player.Think).AddMoveToPosition(new Vector2D(endPoint.x, endPoint.y));
+            player.Think.SetGoal(new MoveToPositionGoal(player, new Vector2D(endPoint.x, endPoint.y)));
         }
     }
 
@@ -181,12 +185,11 @@ public class World : MonoBehaviour {
     {
         if (Graph == null) return;
 
+        // draw all graph nodes
         foreach (var node in Graph.Nodes)
         {
-            // draw nodes
             var pos = node.Key;
             var screenPos = Camera.main.WorldToScreenPoint(pos.ToVector2());
-
             var size = new Vector2D(15, 15);
 
             var guiPosition = new Vector2D(screenPos.x, Screen.height - screenPos.y);
@@ -205,22 +208,22 @@ public class World : MonoBehaviour {
             {
                 GL.Color(GraphColor);
                 Vector2D destPos = edge.Destination.Value;
-                int z = 0;
 
+                // when executing followpathbehavior, show active edges in red
                 FollowPathBehaviour behaviour = (FollowPathBehaviour)player.GetBehaviour(typeof(FollowPathBehaviour));
                 if (behaviour != null)
                 {
                     LinkedList<Vector2D> wayPoints = behaviour.Path.WayPoints;
                     if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
                     {
-                        GL.Color(travelingColor);
+                        GL.Color(GraphTravelingColor);
                     }
-
                 }
 
                 GL.Vertex(new Vector2(pos.X, pos.Y));
                 GL.Vertex(new Vector2(destPos.X, destPos.Y));
             }
+
             GL.End();
             GL.PopMatrix();
         }

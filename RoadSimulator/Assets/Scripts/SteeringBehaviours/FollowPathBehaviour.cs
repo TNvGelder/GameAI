@@ -15,7 +15,6 @@ namespace Assets.Scripts.SteeringBehaviours
 
         public override Vector2D Calculate()
         {
-            
             if (Path.IsArrived(ME))
             {
                 if (Path.WayPoints.Count > 0)
@@ -25,19 +24,18 @@ namespace Assets.Scripts.SteeringBehaviours
                 else
                 {
                     Path.Finished = true;
-                    //ME.CombinedSteeringBehavior.DisableBehaviour(typeof(FollowPathBehaviour));
-                    //ME.CombinedSteeringBehavior.EnableBehaviour(typeof(Explore));
                 }
                 
-            }else if (Path.WayPoints.Count > 0)
+            } else if (Path.WayPoints.Count > 0)
             {
                 Path.Finished = false;
             }
+
             if (!Path.Finished)
             {
                 seekBehaviour.Target = Path.CurrentWayPoint;
                 return seekBehaviour.Calculate();
-            }else
+            } else
             {
                 return new Vector2D();
             }

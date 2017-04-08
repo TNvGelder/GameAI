@@ -17,25 +17,23 @@ namespace Assets.Scripts
         public float MaxTurnRate { get; set; }
         public Vector2D Heading { get; set; }
         public Vector2D Side { get; set; }
-        private List<ISteeringBehavior> steeringBehaviours;
-        public List<ISteeringBehavior> SteeringBehaviours { get { return steeringBehaviours; } }
+        public List<ISteeringBehavior> SteeringBehaviours { get; set; }
         public ICombinedSteeringBehavior CombinedSteeringBehavior { get; set; }
-        private PathPlanner pathPlanner;
-        public PathPlanner PathPlanner { get { return pathPlanner; } }
-        public Think Think { get; set; }
+        public PathPlanner PathPlanner { get; internal set; }
+        public ThinkGoal Think { get; set; }
         public float Fuel { get; internal set; }
         public bool IsCop { get; internal set; }
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
-            this.pathPlanner = pathPlanner;
-            pathPlanner.Me = this;
+            PathPlanner = pathPlanner;
+            PathPlanner.Me = this;
             Mass = 1;
-            Fuel = MyWorld.Random.Next(30, 100);
+            Fuel = MyWorld.Random.Next(30, 100); // random initial fuel value, between 30 and 100
             MaxSpeed = 10;
             BRadius = 2;
             MaxTurnRate = 9999999999999;
-            steeringBehaviours = new List<ISteeringBehavior>();
+            SteeringBehaviours = new List<ISteeringBehavior>();
             CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
 
             if (gameObject.name == "Police")
@@ -57,17 +55,17 @@ namespace Assets.Scripts
 
             Tagged = true;
 
-            Think = new Think(this);
+            Think = new ThinkGoal(this);
         }
 
         public ISteeringBehavior GetBehaviour(Type behaviourType)
         {
 
-            for (int i = 0; i < steeringBehaviours.Count; i++)
+            for (int i = 0; i < SteeringBehaviours.Count; i++)
             {
-                if (steeringBehaviours[i].GetType() == behaviourType)
+                if (SteeringBehaviours[i].GetType() == behaviourType)
                 {
-                    return steeringBehaviours[i];
+                    return SteeringBehaviours[i];
                 }
             }
             return null;
@@ -75,11 +73,11 @@ namespace Assets.Scripts
 
         public void RemoveBehaviour(Type behaviourType)
         {
-            for (int i = 0; i < steeringBehaviours.Count; i++)
+            for (int i = 0; i < SteeringBehaviours.Count; i++)
             {
-                if (steeringBehaviours[i].GetType() == behaviourType)
+                if (SteeringBehaviours[i].GetType() == behaviourType)
                 {
-                    steeringBehaviours.RemoveAt(i);
+                    SteeringBehaviours.RemoveAt(i);
                     return;
                 }
             }
@@ -94,7 +92,7 @@ namespace Assets.Scripts
 
             Think.Process();
 
-            if (steeringBehaviours.Count == 0)
+            if (SteeringBehaviours.Count == 0)
             {
                 return;
             }
@@ -115,7 +113,7 @@ namespace Assets.Scripts
             //update the position
 
             this.Pos += Velocity * timeElapsed;
-            GameObject.transform.position = new Vector2((float)this.Pos.X,(float) this.Pos.Y);
+            GameObject.transform.position = new Vector2(Pos.X, Pos.Y);
 
             // only decrease fuel when moving
             if (Velocity.Length() > 0.1)
@@ -135,7 +133,7 @@ namespace Assets.Scripts
         // afgekeken van https://github.com/wangchen/Programming-Game-AI-by-Example-src
         public void RotateHeadingToFacePosition(Vector2D target)
         {
-            Vector2D toTarget = ((target - this.Pos).Normalize());
+            Vector2D toTarget = ((target - Pos).Normalize());
 
             //first determine the angle between the heading vector and the target
             double angle = Math.Cos(Heading.Dot(toTarget));
@@ -177,12 +175,12 @@ namespace Assets.Scripts
         {
             var tolerance = 4f;
 
-            return this.Pos.Vec2DDistanceSq(pos) < tolerance * tolerance;
+            return Pos.Vec2DDistanceSq(pos) < tolerance * tolerance;
         }
 
         public override string ToString()
         {
-            return String.Format("{0}", Velocity);
+            return string.Format("{0}", Velocity);
         }
     }
 }

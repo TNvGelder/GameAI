@@ -19,6 +19,11 @@ public class GraphGenerator
         find_adjacent_node(start);
     }
 
+    /**
+     * Look to the left, right, above and below a road piece
+     * if there's another road piece, place node and connect edges
+     * then look left,right above and below that road piece etc etc
+     */
     void find_adjacent_node(GameObject obj)
     {
         var sp = obj.GetComponent<SpriteRenderer>().sprite;
@@ -29,7 +34,6 @@ public class GraphGenerator
         var spacing = 2;
         var widthInterval = spacing + width / 2;
         var heightInterval = spacing + height / 2;
-
 
         // right
         CheckAddNode(obj, x + widthInterval, y);
@@ -86,9 +90,11 @@ public class GraphGenerator
         return true;
     }
 
+    /**
+     * Can be made more sophisticated in the future
+     */
     private float CalculateRoadCost(Vector2D v1, Vector2D v2)
     {
-
         var diff = (v2 - v1);
 
         return diff.Length();

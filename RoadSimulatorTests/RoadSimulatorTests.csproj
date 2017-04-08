@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\AStarTests.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GraphTests.cs" />
-    <Compile Include="Assets\Scripts\SteeringBehaviours\SeekBehaviourTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

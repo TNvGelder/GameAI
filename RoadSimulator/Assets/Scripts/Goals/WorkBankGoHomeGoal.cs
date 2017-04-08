@@ -1,25 +1,23 @@
 ﻿using Assets.Scripts.SteeringBehaviours;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Goals
 {
-    public class RobBank : GoalComposite
+    public class WorkBankGoHomeGoal : GoalComposite
     {
-        private FollowPathBehaviour followPath;
-        private Vector2D Target;
+        public FollowPathBehaviour followPath { get; private set; }
 
-        public RobBank(MovingEntity owner) {
+        public WorkBankGoHomeGoal(MovingEntity owner) {
             Owner = owner;
-            Name = "Rob bank";
+            Name = "WorkBankGoHome";
         }
 
         public override void Activate()
         {
-            AddSubgoal(GoTo("Bank", "Rob the bank"));
-            AddSubgoal(GoTo("Home", "Go Home"));
+            AddSubgoal(GoTo("Work"));
+            AddSubgoal(GoTo("Bank"));
+            AddSubgoal(GoTo("Home"));
 
             base.Activate();
         }
@@ -29,19 +27,18 @@ namespace Assets.Scripts.Goals
             var goTo = subgoal as MoveToPositionGoal;
             if (goTo != null)
             {
-                if (goTo.Name == "Rob the bank")
-                {
-                    World.Instance.GetEntity<Bank>().GetRobbed(Owner);
+                if (goTo.Name == "Going to Bank") {
+                    World.Instance.GetEntity<Bank>().AddMoney(200);
                 }
             }
         }
 
-        public Goal GoTo(string tag, string text)
+        public Goal GoTo(string tag)
         {
             var obj = GameObject.FindGameObjectsWithTag(tag)[0];
             var target = new Vector2D(obj.transform.position.x, obj.transform.position.y);
 
-            return new MoveToPositionGoal(Owner, target, text);
+            return new MoveToPositionGoal(Owner, target, "Going to " + tag);
         }
 
         public override Status Process()

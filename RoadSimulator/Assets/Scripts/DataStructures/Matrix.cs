@@ -15,15 +15,6 @@ namespace Assets.Scripts.DataStructures
         public Matrix(float f = 1.0f) : this(f, 0, 0, 0, f, 0, 0, 0, f)
         { }
 
-        //public Matrix(float m11, float m12,
-        //            float m21, float m22)
-        //{
-        //    matrix = new float[2, 2];
-        //    matrix[0, 0] = m11;
-        //    matrix[0, 1] = m12;
-        //    matrix[1, 0] = m21;
-        //    matrix[1, 1] = m22;
-        //}
 
         public Matrix(
                     float f00, float f01, float f02,

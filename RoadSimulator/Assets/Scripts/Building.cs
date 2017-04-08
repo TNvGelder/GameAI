@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -11,6 +10,7 @@ namespace Assets.Scripts
 
         public override void Update(float delta)
         {
+            // noop
         }
     }
 }

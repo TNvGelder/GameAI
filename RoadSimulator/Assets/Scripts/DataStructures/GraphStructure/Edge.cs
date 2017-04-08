@@ -4,7 +4,6 @@ using DataStructures.GraphStructure;
 
 namespace DataStructures.GraphStructure
 {
-
     //The Edge class provides data about a connected node and what the cost is to reach the node using that edge.
     public class Edge<T> : IComparable<Edge<T>>
     {
@@ -16,7 +15,6 @@ namespace DataStructures.GraphStructure
             Destination = destination;
             Cost = cost;
         }
-
 
         public int CompareTo(Edge<T> otherEdge)
         {

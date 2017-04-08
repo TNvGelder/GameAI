@@ -7,63 +7,39 @@ namespace Assets.Scripts
 {
     public class Path
     {
-        private LinkedList<Vector2D> wayPoints;
-        private Vector2D currentWayPoint;
-        private bool finished = true;
-        public bool Finished { get {
-                return finished;
-           } set { finished = value; } }
-        public Vector2D CurrentWayPoint
-        {
-            get
-            {
-                return currentWayPoint;
-            }
-            set { currentWayPoint = value; }
-        }
-
-        public LinkedList<Vector2D> WayPoints {
-            get
-            {
-                return wayPoints;
-            }
-            set {
-                wayPoints = value;
-            }
-        }
+        public bool Finished { get; set; }
+        public Vector2D CurrentWayPoint { get; set; }
+        public LinkedList<Vector2D> WayPoints { get; set; }
 
         public Path(LinkedList<Vector2D> wayPoints)
         {
-            this.wayPoints = wayPoints;
+            Finished = true;
+            WayPoints = wayPoints;
             NextWayPoint();
         }
 
-        
-
         public bool IsArrived(MovingEntity entity)
         {
-            if (currentWayPoint == null)
+            if (CurrentWayPoint == null)
             {
                 return true;
             }
-            Vector2D diff = currentWayPoint - entity.Pos;
+            Vector2D diff = CurrentWayPoint - entity.Pos;
             return (Math.Abs(diff.X) < 1 && Math.Abs(diff.Y) < 1);
         }
 
-
-
         public bool NextWayPoint()
         {
-            int count = wayPoints.Count;
+            int count = WayPoints.Count;
             if (count > 0)
             {
-                finished = false;
-                currentWayPoint = wayPoints.First.Value;
-                wayPoints.RemoveFirst();
+                Finished = false;
+                CurrentWayPoint = WayPoints.First.Value;
+                WayPoints.RemoveFirst();
                 return true;
             }
-            currentWayPoint = null;
-            finished = true;
+            CurrentWayPoint = null;
+            Finished = true;
 
             return false;
         }

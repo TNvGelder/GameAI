@@ -8,7 +8,6 @@ namespace Assets.Scripts.DataStructures.GraphStructure
 {
     public abstract class PathFindingStrategy<T>
     {
-
         protected Graph<T> graph;
 
         public PathFindingStrategy(Graph<T> graph)
@@ -18,6 +17,5 @@ namespace Assets.Scripts.DataStructures.GraphStructure
 
 
         public abstract void FindShortestPath(T startValue, T endValue);
-        
     }
 }
