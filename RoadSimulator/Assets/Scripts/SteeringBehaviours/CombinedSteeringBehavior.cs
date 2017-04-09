@@ -13,6 +13,7 @@ namespace Assets.Scripts.SteeringBehaviours
             { typeof(SeekBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },
             { typeof(ExploreBehavior), 1f },
+            { typeof(Separation), 4f}
         };
 
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)

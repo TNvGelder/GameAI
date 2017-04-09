@@ -23,6 +23,7 @@ namespace Assets.Scripts
         public ThinkGoal Think { get; set; }
         public float Fuel { get; internal set; }
         public bool IsCop { get; internal set; }
+        public double ViewDistance;
 
         public MovingEntity(GameObject gameObject, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(gameObject, pos, size)
         {
@@ -35,6 +36,7 @@ namespace Assets.Scripts
             MaxTurnRate = 9999999999999;
             SteeringBehaviours = new List<ISteeringBehavior>();
             CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
+            ViewDistance = 5;
 
             if (gameObject.name == "Police")
             {
