@@ -36,7 +36,7 @@ namespace Assets.Scripts
             MaxTurnRate = 9999999999999;
             SteeringBehaviours = new List<ISteeringBehavior>();
             CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
-            ViewDistance = 3;
+            ViewDistance = 1.25;
 
             if (gameObject.name == "Police")
             {

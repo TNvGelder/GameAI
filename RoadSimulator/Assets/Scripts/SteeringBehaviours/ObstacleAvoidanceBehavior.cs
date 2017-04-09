@@ -6,7 +6,7 @@ namespace Assets.Scripts.SteeringBehaviours
 {
     public class ObstacleAvoidanceBehavior : SteeringBehaviour
     {
-        private const int MinDetectionBoxLength = 5;
+        private const double MinDetectionBoxLength = 1.5;
 
         public ObstacleAvoidanceBehavior(MovingEntity me) : base(me)
         {
