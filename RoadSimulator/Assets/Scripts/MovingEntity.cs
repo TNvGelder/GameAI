@@ -36,7 +36,7 @@ namespace Assets.Scripts
             MaxTurnRate = 9999999999999;
             SteeringBehaviours = new List<ISteeringBehavior>();
             CombinedSteeringBehavior = new WeightedSumPriorityCombinedSteeringBehavior(this);
-            ViewDistance = 5;
+            ViewDistance = 3;
 
             if (gameObject.name == "Police")
             {
@@ -120,7 +120,7 @@ namespace Assets.Scripts
             // only decrease fuel when moving
             if (Velocity.Length() > 0.1)
             {
-                Fuel -= 0.02f * 2/3;
+                Fuel -= 0.02f * 1/3;
             }
 
             //update the heading if the vehicle has a velocity greater than a very small
