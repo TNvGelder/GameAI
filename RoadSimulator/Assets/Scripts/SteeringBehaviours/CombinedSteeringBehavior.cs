@@ -15,26 +15,9 @@ namespace Assets.Scripts.SteeringBehaviours
             { typeof(ExploreBehavior), 1f },
         };
 
-        private Dictionary<Type, bool> enabled = new Dictionary<Type, bool>();
-
         public WeightedSumPriorityCombinedSteeringBehavior(MovingEntity entity)
         {
             _entity = entity;
-        }
-
-        public void EnableBehaviour(Type behaviour)
-        {
-            enabled[behaviour] = true;
-        }
-
-        public void DisableBehaviour(Type behaviour)
-        {
-            enabled[behaviour] = false;
-        }
-
-        public bool IsEnabled(Type behaviour)
-        {
-            return enabled.ContainsKey(behaviour) && enabled[behaviour];
         }
 
         public Vector2D Calculate()
