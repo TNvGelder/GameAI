@@ -36,6 +36,7 @@ public class World : MonoBehaviour {
     public GUIStyle GraphNodeGUIStyle;
     public Color GraphColor = new Color(255, 255, 255);
     public Color GraphTravelingColor = new Color(255, 0, 0);
+    public Color ConsideredColor = new Color(0, 0, 255);
 
     public Car player;
 
@@ -302,6 +303,9 @@ public class World : MonoBehaviour {
                     if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
                     {
                         GL.Color(GraphTravelingColor);
+                    }else if (edge.Considered)
+                    {
+                        GL.Color(ConsideredColor);
                     }
                 }
 

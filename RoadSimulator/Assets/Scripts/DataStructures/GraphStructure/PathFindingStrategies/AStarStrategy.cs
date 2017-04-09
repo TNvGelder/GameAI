@@ -32,6 +32,10 @@ namespace Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies
             foreach (GraphNode<Vector2D> node in graph.Nodes.Values)
             {
                 node.Reset();
+                foreach(Edge<Vector2D> edge in node.Adjacent)
+                {
+                    edge.Considered = false;
+                }
             }
 
             GraphNode<Vector2D> start = graph.Nodes[startValue];
@@ -54,12 +58,14 @@ namespace Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies
                     {
                         GraphNode<Vector2D> adjacentNode = e.Destination;
                         double edgeCost = e.Cost + heuristic(e.Destination, goal);
-
+                        e.Considered = true;
                         if (adjacentNode.Distance > node.Distance + edgeCost)
                         {
                             adjacentNode.Distance = node.Distance + edgeCost;
                             adjacentNode.Prev = node;
-                            priorityQueue.Add(new Edge<Vector2D>(adjacentNode, adjacentNode.Distance));
+                            Edge<Vector2D> newEdge = new Edge<Vector2D>(adjacentNode, adjacentNode.Distance);
+                            newEdge.Considered = true;
+                            priorityQueue.Add(newEdge);
                         }
                     }
                 }
