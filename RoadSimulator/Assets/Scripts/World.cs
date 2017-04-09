@@ -196,43 +196,57 @@ public class World : MonoBehaviour {
         bool first = !ThinkGoal.IsAnyoneDoing<RobBank>();
         if (!ThinkGoal.IsAnyoneDoing<RobBank>() && !findingRobber)
         {
-            findingRobber = true;
-            double highestDesirability = Double.MinValue;
-            List<Bank> banks = GetEntitiesOfType<Bank>();
-            List<Car> cars = GetEntitiesOfType<Car>();
-            Bank mostDesirableBank = banks[0];
-            Car mostDesirableCar = cars[0];
-            Debug.Log("Finding robber");
-            foreach (Car car in cars)
-            {
-                if (!car.IsCop)
-                {
-                    foreach (Bank bank in banks)
-                    {
-                        double desirability = CalculateRobbingDesirability(car.Fuel, bank.MoneyInBank);
-                        //Debug.Log("Fuel: " + car.Fuel + ", Money: " + bank.MoneyInBank + ", Desirability: " + desirability);
-                        if (desirability > highestDesirability)
-                        {
-                            mostDesirableBank = bank;
-                            mostDesirableCar = car;
-                            highestDesirability = desirability;
-
-                        }
-                    }
-                } 
-            }
-            Goal goal = new RobBank(mostDesirableCar, mostDesirableBank);
-            if (mostDesirableCar.Think.Subgoals.Count > 0)
-            {
-                GoalComposite subGoal = mostDesirableCar.Think.Subgoals[0] as GoalComposite;
-                mostDesirableCar.Think.InsertPriorityGoal(subGoal, goal);
-            }else
-            {
-                mostDesirableCar.Think.AddSubgoal(mostDesirableCar.Think);
-            }
-            
-            findingRobber = false;
+            FindRobber();
         }
+    }
+
+    private void FindRobber()
+    {
+        findingRobber = true;
+        double highestDesirability = Double.MinValue;
+        List<Bank> banks = GetEntitiesOfType<Bank>();
+        List<Car> cars = GetEntitiesOfType<Car>();
+        Bank mostDesirableBank = banks[0];
+        Car mostDesirableCar = cars[0];
+        Debug.Log("Finding out who is going to be the robber");
+        foreach (Car car in cars)
+        {
+            if (!car.IsCop)
+            {
+                foreach (Bank bank in banks)
+                {
+                    double desirability = CalculateRobbingDesirability(car.Fuel, bank.MoneyInBank);
+                    //Debug.Log("Fuel: " + car.Fuel + ", Money: " + bank.MoneyInBank + ", Desirability: " + desirability);
+                    if (desirability > highestDesirability)
+                    {
+                        mostDesirableBank = bank;
+                        mostDesirableCar = car;
+                        highestDesirability = desirability;
+                    }
+                }
+            }
+        }
+
+        Goal goal = new RobBank(mostDesirableCar, mostDesirableBank);
+        if (mostDesirableCar.Think.Subgoals.Count > 0)
+        {
+            GoalComposite subGoal = mostDesirableCar.Think.Subgoals[0] as GoalComposite;
+
+            if (subGoal != null)
+            {
+                mostDesirableCar.Think.InsertPriorityGoal(subGoal, goal);
+            }
+            else
+            {
+                mostDesirableCar.Think.SetGoal(goal);
+            }
+        }
+        else
+        {
+            mostDesirableCar.Think.AddSubgoal(goal);
+        }
+
+        findingRobber = false;
     }
 
     private void Reload()
