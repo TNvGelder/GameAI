@@ -7,6 +7,7 @@ namespace Assets.Scripts.Goals
     public class WorkBankGoHomeGoal : GoalComposite
     {
         public FollowPathBehaviour followPath { get; private set; }
+        private GameObject targetObj;
 
         public WorkBankGoHomeGoal(MovingEntity owner) {
             Owner = owner;
@@ -15,9 +16,9 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            AddSubgoal(GoTo("Work"));
-            AddSubgoal(GoTo("Bank"));
-            AddSubgoal(GoTo("Home"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner,"Work"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Bank", out targetObj));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Home"));
 
             base.Activate();
         }
@@ -28,18 +29,12 @@ namespace Assets.Scripts.Goals
             if (goTo != null)
             {
                 if (goTo.Name == "Going to Bank") {
-                    World.Instance.GetEntity<Bank>().AddMoney(200);
+                    
+                    World.Instance.GetEntity<Bank>(targetObj).AddMoney(200);
                 }
             }
         }
 
-        public Goal GoTo(string tag)
-        {
-            var obj = GameObject.FindGameObjectsWithTag(tag)[0];
-            var target = new Vector2D(obj.transform.position.x, obj.transform.position.y);
-
-            return new MoveToPositionGoal(Owner, target, "Going to " + tag);
-        }
 
         public override Status Process()
         {

@@ -14,24 +14,12 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            GoTo("GasStation", "GasStation");
-            GoTo("Home", "Home");
-            GoTo("Work", "Work");
-            GoTo("Bank", "Bank");
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "GasStation", "GasStation"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Home", "Home"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Work", "Work"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Bank", "Bank"));
 
             base.Activate();
-        }
-
-        public void GoTo(string tag, string text)
-        {
-            var objects = GameObject.FindGameObjectsWithTag(tag);
-
-            foreach(var obj in objects)
-            {
-                var target = new Vector2D(obj.transform.position.x, obj.transform.position.y);
-
-                AddSubgoal(new MoveToPositionGoal(Owner, target, text));
-            }
         }
 
         public override Status Process()

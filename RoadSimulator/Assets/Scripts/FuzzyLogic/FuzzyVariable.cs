@@ -47,7 +47,7 @@ namespace Assets.Scripts.FuzzyLogic
             foreach (FuzzySet set in memberSets.Values)
             {
                 bottom += set.DOM;
-                top += set.GetRepresentativeValue;
+                top += set.GetRepresentativeValue * set.DOM;
             }
 
             //prevent divide by 0

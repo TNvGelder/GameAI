@@ -12,6 +12,7 @@ using System.Linq;
 public class World : MonoBehaviour {
 
     public List<BaseGameEntity> Entities = new List<BaseGameEntity>();
+    private Dictionary<Type, IEnumerable<BaseGameEntity>> entityLists = new Dictionary<Type, IEnumerable<BaseGameEntity>>();
     public float Width { get; set; }
     public float Height { get; set; }
     public bool DisplayIDs { get; set; }
@@ -73,7 +74,7 @@ public class World : MonoBehaviour {
             }
         }
 
-        CreateEntityForObject<Bank>(GameObject.Find("Bank"));
+        CreateEntityForObjects<Bank>(GameObject.FindGameObjectsWithTag("Bank"));
         CreateEntityForObject<Work>(GameObject.Find("Work"));
         CreateEntityForObjects<GasStation>(GameObject.FindGameObjectsWithTag("GasStation"));
     }
@@ -239,9 +240,29 @@ public class World : MonoBehaviour {
         return (T)Entities.FirstOrDefault(x => x is T);
     }
 
+    public T GetEntity<T>(GameObject gameObject) where T : BaseGameEntity
+    {
+        return (T)GetEntitiesOfType<T>().FirstOrDefault(x => ( x.GameObject.Equals(gameObject)));
+    }
+
     public void TagObstaclesWithinViewRange(MovingEntity entity, double range)
     {
         TagNeighbors(entity, GetMovingEntities(), range);
+    }
+
+    public List<T> GetEntitiesOfType<T>() where T: BaseGameEntity
+    {
+        IEnumerable<BaseGameEntity> entitiesOfType;
+        if (entityLists.ContainsKey(typeof(T)))
+        {
+            entitiesOfType = entityLists[typeof(T)];
+        }else
+        {
+            entitiesOfType = Entities.Where(x => x is T);
+            entityLists[typeof(T)] = entitiesOfType;
+
+        }
+        return entitiesOfType.Cast<T>().ToList();
     }
 
     public void TagNeighbors(MovingEntity entity, List<MovingEntity> obstacles, double radius)
