@@ -229,23 +229,7 @@ public class World : MonoBehaviour {
         }
 
         Goal goal = new RobBank(mostDesirableCar, mostDesirableBank);
-        if (mostDesirableCar.Think.Subgoals.Count > 0)
-        {
-            GoalComposite subGoal = mostDesirableCar.Think.Subgoals[0] as GoalComposite;
-
-            if (subGoal != null)
-            {
-                mostDesirableCar.Think.InsertPriorityGoal(subGoal, goal);
-            }
-            else
-            {
-                mostDesirableCar.Think.SetGoal(goal);
-            }
-        }
-        else
-        {
-            mostDesirableCar.Think.AddSubgoal(goal);
-        }
+        mostDesirableCar.Think.SetGoal(goal);
 
         findingRobber = false;
     }
