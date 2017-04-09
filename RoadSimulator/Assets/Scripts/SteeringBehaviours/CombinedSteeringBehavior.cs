@@ -8,7 +8,7 @@ namespace Assets.Scripts.SteeringBehaviours
         private MovingEntity _entity;
         public Dictionary<Type, float> weights = new Dictionary<Type, float>()
         {
-            { typeof(ObstacleAvoidanceBehavior), 2f },
+            { typeof(ObstacleAvoidanceBehavior), 0f },
             { typeof(FleeBehaviour), 1f },
             { typeof(SeekBehaviour), 1f },
             { typeof(SeekMovingEntityBehaviour), 1f },

@@ -9,7 +9,6 @@ namespace DataStructures.GraphStructure
     {
         public GraphNode<T> Destination { get; set; }
         public double Cost { get; set; }
-        public bool Considered = false;
 
         public Edge(GraphNode<T> destination, double cost)
         {

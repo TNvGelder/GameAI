@@ -6,6 +6,7 @@ using System.Text;
 using DataStructures.GraphStructure;
 using DataStructures.PriorityQueue;
 
+
 namespace Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies
 {
     public class AStarStrategy : PathFindingStrategy<Vector2D>
@@ -32,16 +33,15 @@ namespace Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies
             foreach (GraphNode<Vector2D> node in graph.Nodes.Values)
             {
                 node.Reset();
-                foreach(Edge<Vector2D> edge in node.Adjacent)
-                {
-                    edge.Considered = false;
-                }
             }
 
             GraphNode<Vector2D> start = graph.Nodes[startValue];
             GraphNode<Vector2D> goal = graph.Nodes[endValue];
             priorityQueue.Add(new Edge<Vector2D>(start, 0));
             start.Distance = 0;
+            World world = World.Instance;
+            HashSet<Vector2D> consideredEdges = new HashSet<Vector2D>();
+            
             while (!priorityQueue.IsEmpty)
             {
                 Edge<Vector2D> minPath = priorityQueue.DeleteMin();
@@ -52,24 +52,34 @@ namespace Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies
                     node.Scratch = 1;
                     if (node.Value.Equals(endValue))
                     {
+                        if (world.IsSearchingPlayerPath)
+                        {
+                            world.ConsideredEdges = consideredEdges;
+                        }
                         return;
                     }
                     foreach (Edge<Vector2D> e in node.Adjacent)
                     {
+                        if (world.IsSearchingPlayerPath)
+                        {
+                            consideredEdges.Add(node.Value);
+                            consideredEdges.Add(e.Destination.Value);
+                        }
                         GraphNode<Vector2D> adjacentNode = e.Destination;
                         double edgeCost = e.Cost + heuristic(e.Destination, goal);
-                        e.Considered = true;
                         if (adjacentNode.Distance > node.Distance + edgeCost)
                         {
                             adjacentNode.Distance = node.Distance + edgeCost;
                             adjacentNode.Prev = node;
                             Edge<Vector2D> newEdge = new Edge<Vector2D>(adjacentNode, adjacentNode.Distance);
-                            newEdge.Considered = true;
                             priorityQueue.Add(newEdge);
                         }
                     }
                 }
             }
+
+            
+
         }
 
         /// <summary>

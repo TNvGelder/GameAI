@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using Assets.Scripts.FuzzyLogic;
 using Assets.Scripts.FuzzyLogic.FuzzyTerms;
+using Assets.Scripts.DataStructures.GraphStructure.PathFindingStrategies;
 
 public class World : MonoBehaviour {
 
@@ -25,6 +26,8 @@ public class World : MonoBehaviour {
     public static World Instance { get; internal set; }
     private FuzzyModule fuzzyModule;
     private bool findingRobber = false;
+    public bool IsSearchingPlayerPath { get; set; }
+    public HashSet<Vector2D> ConsideredEdges { get; set; }
 
     // graph
     private Graph<Vector2D> graph;
@@ -38,12 +41,17 @@ public class World : MonoBehaviour {
     public Color GraphTravelingColor = new Color(255, 0, 0);
     public Color ConsideredColor = new Color(0, 0, 255);
 
-    public Car player;
+    private Car player;
+    public Car Player { get
+        {
+            return player;
+        } }
 
     // Unity calls this function on startup, so we can do initialization logic here
     void Start() {
         Instance = this;
-
+        IsSearchingPlayerPath = false;
+        ConsideredEdges = new HashSet<Vector2D>();
         // Make it so that the worldsize is the size of the camera
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         Height = cam.orthographicSize * 2;
@@ -137,6 +145,7 @@ public class World : MonoBehaviour {
     {
         graphGenerator = new GraphGenerator();
         graph = graphGenerator.Graph;
+        graph.PathFindingStrategy = new AStarStrategy(graph);
     }
 
     private void InitializeFuzzyLogic()
@@ -216,7 +225,7 @@ public class World : MonoBehaviour {
             {
                 foreach (Bank bank in banks)
                 {
-                    double desirability = CalculateRobbingDesirability(car.Fuel, bank.MoneyInBank);
+                    double desirability = CalculateRobbingDesirability(Math.Max(car.Fuel, 0.0), bank.MoneyInBank);
                     //Debug.Log("Fuel: " + car.Fuel + ", Money: " + bank.MoneyInBank + ", Desirability: " + desirability);
                     if (desirability > highestDesirability)
                     {
@@ -265,6 +274,7 @@ public class World : MonoBehaviour {
         }
     }
 
+    private bool drawn = false;
     public void RenderGraph()
     {
         if (Graph == null) return;
@@ -287,12 +297,12 @@ public class World : MonoBehaviour {
             // draw edges
             GL.PushMatrix();
             GL.Begin(GL.LINES);
+            HashSet<Vector2D> drawnPoints = new HashSet<Vector2D>();
             
             foreach (var edge in node.Value.Adjacent)
             {
                 GL.Color(GraphColor);
                 Vector2D destPos = edge.Destination.Value;
-
                 // when executing followpathbehavior, show active edges in red
                 FollowPathBehaviour behaviour = (FollowPathBehaviour)player.GetBehaviour(typeof(FollowPathBehaviour));
                 if (behaviour != null)
@@ -301,14 +311,18 @@ public class World : MonoBehaviour {
                     if (wayPoints.Contains(pos) && wayPoints.Contains(destPos))
                     {
                         GL.Color(GraphTravelingColor);
-                    }else if (edge.Considered)
+                    }else if (ConsideredEdges.Contains(pos) && ConsideredEdges.Contains(destPos))
                     {
                         GL.Color(ConsideredColor);
                     }
+                    drawnPoints.Add(pos);
+                    drawnPoints.Add(destPos);
                 }
 
                 GL.Vertex(new Vector2(pos.X, pos.Y));
                 GL.Vertex(new Vector2(destPos.X, destPos.Y));
+                
+                
             }
 
             GL.End();

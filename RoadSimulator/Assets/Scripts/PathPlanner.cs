@@ -56,13 +56,22 @@ namespace Assets.Scripts
 
         public bool CreatePathToPosition(Vector2D TargetPos, out LinkedList<Vector2D> path)
         {
+            
             path = new LinkedList<Vector2D>();
 
             GraphNode<Vector2D> closestNodeToMe = GetClosestNodeToPosition(Me.Pos);
             GraphNode<Vector2D> closestNodeToTarget = GetClosestNodeToPosition(TargetPos);
             if (closestNodeToMe != null && closestNodeToTarget != null)
             {
+                if (World.Instance.Player == Me)
+                {
+                    World.Instance.IsSearchingPlayerPath = true;
+                }
                 path = Graph.GetPath(closestNodeToMe.Value, closestNodeToTarget.Value);
+                if (World.Instance.Player == Me)
+                {
+                    World.Instance.IsSearchingPlayerPath = false;
+                }
                 if (path.Count > 0)
                 {
                     path.AddLast(TargetPos);
@@ -70,7 +79,7 @@ namespace Assets.Scripts
                 return (path.Count > 0);
 
             }
-
+            
             return false;
         }
 
