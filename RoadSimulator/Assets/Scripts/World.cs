@@ -218,7 +218,6 @@ public class World : MonoBehaviour {
         List<Car> cars = GetEntitiesOfType<Car>();
         Bank mostDesirableBank = banks[0];
         Car mostDesirableCar = cars[0];
-        Debug.Log("Finding out who is going to be the robber");
         foreach (Car car in cars)
         {
             if (!car.IsCop)
