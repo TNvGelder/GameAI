@@ -5,6 +5,7 @@ namespace Assets.Scripts
     public class Car : MovingEntity
     {
         public GUIStyle GoalListStyle { get; private set; }
+        
 
         public Car(GameObject obj, Vector2D pos, Vector2D size, PathPlanner pathPlanner) : base(obj, pos, size , pathPlanner)
         {

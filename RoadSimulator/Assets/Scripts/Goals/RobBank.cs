@@ -12,14 +12,15 @@ namespace Assets.Scripts.Goals
         private Vector2D Target;
         private GameObject targetObj;
 
-        public RobBank(MovingEntity owner) {
+        public RobBank(MovingEntity owner, Bank bank) {
             Owner = owner;
             Name = "Rob bank";
+            targetObj = bank.GameObject;
         }
 
         public override void Activate()
         {
-            AddSubgoal(DestinationTravelService.GoTo(Owner, "Bank", "Rob the bank", out targetObj));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, targetObj, "Rob the bank"));
             AddSubgoal(DestinationTravelService.GoTo(Owner, "Home", "Go Home"));
 
             base.Activate();

@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using System.Linq;
+using Assets.Scripts.FuzzyLogic;
+using Assets.Scripts.FuzzyLogic.FuzzyTerms;
 
 public class World : MonoBehaviour {
 
@@ -21,6 +23,8 @@ public class World : MonoBehaviour {
     public bool DisplayStats { get; set; }
     public System.Random Random = new System.Random();
     public static World Instance { get; internal set; }
+    private FuzzyModule fuzzyModule;
+    private bool findingRobber = false;
 
     // graph
     private Graph<Vector2D> graph;
@@ -46,6 +50,7 @@ public class World : MonoBehaviour {
 
         DisplayStats = true;
 
+        InitializeFuzzyLogic();
         GenerateGraph();
 
         // initialize styles only once at startup, to improve rendering speed significantly
@@ -133,7 +138,43 @@ public class World : MonoBehaviour {
         graph = graphGenerator.Graph;
     }
 
-	void FixedUpdate () {
+    private void InitializeFuzzyLogic()
+    {
+        FuzzyModule fm = new FuzzyModule();
+        FuzzyVariable FuelStatus = fm.CreateFLV("FuelStatus");
+        FuzzyVariable BankStatus = fm.CreateFLV("BankStatus");
+        FuzzyVariable RobDesirability = fm.CreateFLV("RobbingDesirability");
+        FzSet FuelLow = FuelStatus.AddLeftShoulderSet("Fuel_Low", 0, 30, 50);
+        FzSet FuelMedium = FuelStatus.AddTriangularSet("Fuel_Medium", 30, 55, 80);
+        FzSet FuelHigh = FuelStatus.AddRightShoulderSet("Fuel_High", 55, 80, 100);
+        FzSet MoneyLow = BankStatus.AddLeftShoulderSet("Money_Low", 0, 100, 500);
+        FzSet MoneyMedium = BankStatus.AddTriangularSet("Money_Medium", 200, 500, 800);
+        FzSet MoneyHigh = BankStatus.AddRightShoulderSet("Money_High", 500, 800, 3000);
+        FzSet Undesirable = RobDesirability.AddLeftShoulderSet("Undesirable", 0, 0, 100);
+        FzSet Desirable = RobDesirability.AddRightShoulderSet("Desirable", 0, 100, 100);
+
+        fm.AddRule(new FzAND(FuelLow, MoneyLow), new FzVery(Undesirable));
+        fm.AddRule(new FzAND(FuelLow, MoneyMedium), new FzVery(Undesirable));
+        fm.AddRule(new FzAND(FuelLow, MoneyHigh), Undesirable);
+        fm.AddRule(new FzAND(FuelMedium, MoneyLow), new FzVery(Undesirable));
+        fm.AddRule(new FzAND(FuelMedium, MoneyMedium), new FzFairly(Undesirable));
+        fm.AddRule(new FzAND(FuelMedium, MoneyHigh), Desirable);
+        fm.AddRule(new FzAND(FuelHigh, MoneyLow), Undesirable);
+        fm.AddRule(new FzAND(FuelHigh, MoneyMedium), Desirable);
+        fm.AddRule(new FzAND(FuelHigh, MoneyHigh), new FzVery(Desirable));
+
+        fuzzyModule = fm;
+    }
+
+    private double CalculateRobbingDesirability(double fuel, double bankMoney)
+    {
+        //fuzzify inputs
+        fuzzyModule.Fuzzify("FuelStatus", fuel);
+        fuzzyModule.Fuzzify("BankStatus", bankMoney);
+        return fuzzyModule.Defuzzify("RobbingDesirability", DefuzzifyMethod.centroid);
+    }
+
+    void FixedUpdate () {
         if (Input.GetKeyDown("r"))
         {
             Reload();
@@ -143,11 +184,54 @@ public class World : MonoBehaviour {
         {
             HandleClick();
         }
-
+        
         float timeElapsed = Time.fixedDeltaTime;
         foreach (MovingEntity me in GetMovingEntities())
         {
             me.Update(timeElapsed);
+        }
+
+        //Find the most desirable bank and car combination for robbing
+        //and give the car the desire to rob the bank. Uses fuzzy logic
+        bool first = !ThinkGoal.IsAnyoneDoing<RobBank>();
+        if (!ThinkGoal.IsAnyoneDoing<RobBank>() && !findingRobber)
+        {
+            findingRobber = true;
+            double highestDesirability = Double.MinValue;
+            List<Bank> banks = GetEntitiesOfType<Bank>();
+            List<Car> cars = GetEntitiesOfType<Car>();
+            Bank mostDesirableBank = banks[0];
+            Car mostDesirableCar = cars[0];
+            Debug.Log("Finding robber");
+            foreach (Car car in cars)
+            {
+                if (!car.IsCop)
+                {
+                    foreach (Bank bank in banks)
+                    {
+                        double desirability = CalculateRobbingDesirability(car.Fuel, bank.MoneyInBank);
+                        //Debug.Log("Fuel: " + car.Fuel + ", Money: " + bank.MoneyInBank + ", Desirability: " + desirability);
+                        if (desirability > highestDesirability)
+                        {
+                            mostDesirableBank = bank;
+                            mostDesirableCar = car;
+                            highestDesirability = desirability;
+
+                        }
+                    }
+                } 
+            }
+            Goal goal = new RobBank(mostDesirableCar, mostDesirableBank);
+            if (mostDesirableCar.Think.Subgoals.Count > 0)
+            {
+                GoalComposite subGoal = mostDesirableCar.Think.Subgoals[0] as GoalComposite;
+                mostDesirableCar.Think.InsertPriorityGoal(subGoal, goal);
+            }else
+            {
+                mostDesirableCar.Think.AddSubgoal(mostDesirableCar.Think);
+            }
+            
+            findingRobber = false;
         }
     }
 

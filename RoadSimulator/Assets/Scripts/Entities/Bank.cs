@@ -14,12 +14,13 @@ namespace Assets.Scripts
         {
             StatsStyle = new GUIStyle();
             StatsStyle.alignment = TextAnchor.UpperLeft;
-            MoneyInBank = 1000;
+            MoneyInBank = World.Instance.Random.Next(0,1500);
         }
 
         internal void AddMoney(int v)
         {
-            MoneyInBank += v;
+            int newMoney = MoneyInBank + v;
+            MoneyInBank = Math.Min(newMoney, 3000);
         }
 
         public override void OnGUI()

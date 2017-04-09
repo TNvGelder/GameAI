@@ -14,6 +14,12 @@ namespace Assets.Scripts
     public class DestinationTravelService
     {
 
+        public static MoveToPositionGoal GoTo(MovingEntity traveler, GameObject destination, string text)
+        {
+            Vector2D target = new Vector2D(destination.transform.position.x, destination.transform.position.y);
+            return new MoveToPositionGoal(traveler, target, text);
+        }
+
         public static MoveToPositionGoal GoTo(MovingEntity traveler, string tag, string text)
         {
             GameObject chosen;

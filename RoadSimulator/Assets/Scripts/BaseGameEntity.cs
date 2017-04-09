@@ -5,6 +5,7 @@ namespace Assets.Scripts
     public abstract class BaseGameEntity 
     {
         public GameObject GameObject;
+        public static int EntityCount = 0;
         public int ID { get; set; }
         public Vector2D Pos { get; set; }
         public float BRadius { get; set; }
@@ -15,7 +16,8 @@ namespace Assets.Scripts
 
         public BaseGameEntity(GameObject gameObject, Vector2D pos, Vector2D size)
         {
-            ID = new System.Random().Next(0, 99999);
+            EntityCount++;
+            ID = EntityCount;
             GameObject = gameObject;
             Pos = pos;
             MyWorld = World.Instance;

@@ -16,6 +16,5 @@ C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEngine.Analy
 C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.xml
 C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEngine.VR.xml
 C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_bin\Debug\UnityEditor.xml
-C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_obj\Debug\RoadSimulator.csprojResolveAssemblyReference.cache
 C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_obj\Debug\Assembly-CSharp.dll
 C:\Projects\GameAIProject\RoadSimulator\Temp\UnityVS_obj\Debug\Assembly-CSharp.pdb

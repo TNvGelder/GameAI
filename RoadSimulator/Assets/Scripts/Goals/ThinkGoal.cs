@@ -8,6 +8,8 @@ namespace Assets.Scripts.Goals
 {
     public class ThinkGoal : GoalComposite
     {
+        
+
         public List<IThinkStrategy> ThinkStrategies = new List<IThinkStrategy>
         {
             new FuelStrategy()
@@ -62,10 +64,6 @@ namespace Assets.Scripts.Goals
             {
                 return new WorkBankGoHomeGoal(Owner);
             }
-            else if (!IsAnyoneDoing<RobBank>() && !Owner.IsCop)
-            {
-                return new RobBank(Owner);
-            }
             else
             {
                 var r = World.Instance.Random.Next(1000, 2000);
@@ -79,7 +77,7 @@ namespace Assets.Scripts.Goals
             }
         }
         
-        public bool IsAnyoneDoing<T>()
+        public static bool IsAnyoneDoing<T>()
         {
             return World.Instance.GetMovingEntities().Any(x => x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T);
         }
