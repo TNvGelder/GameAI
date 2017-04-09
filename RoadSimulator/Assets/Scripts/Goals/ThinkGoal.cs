@@ -83,7 +83,13 @@ namespace Assets.Scripts.Goals
         
         public static bool IsAnyoneDoing<T>()
         {
-            return World.Instance.GetMovingEntities().Any(x => x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T);
+            return World.Instance.GetMovingEntities().Any(x =>
+            {
+                if (x.Think == null || x.Think.Subgoals == null)
+                    return false;
+
+                return x.Think.Subgoals.Count > 0 && x.Think.Subgoals[0] is T;
+            });
         }
 
         public  void SetGoal(Goal goal)
