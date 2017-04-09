@@ -36,7 +36,11 @@ namespace Assets.Scripts.Goals
         internal void InsertPriorityGoal(GoalComposite goal, Goal priorityGoal)
         {
             goal.Subgoals.Insert(0, priorityGoal);
-            goal.Subgoals[1].Terminate();
+
+            if (goal.Subgoals.Count > 1)
+            {
+                goal.Subgoals[1].Terminate();
+            }
         }
 
         public Goal Determine()
