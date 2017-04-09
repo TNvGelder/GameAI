@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\AStarTests.cs" />
     <Compile Include="Assets\Scripts\DataStructures\GraphStructure\GraphTests.cs" />
+    <Compile Include="Assets\Scripts\FuzzyLogic\FuzzyModuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

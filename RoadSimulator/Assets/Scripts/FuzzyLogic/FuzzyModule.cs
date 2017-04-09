@@ -10,8 +10,8 @@ namespace Assets.Scripts.FuzzyLogic
     public class FuzzyModule
     {
         
-        private Dictionary<string, FuzzyVariable> variables;
-        private List<FuzzyRule> rules;
+        private Dictionary<string, FuzzyVariable> variables = new Dictionary<string, FuzzyVariable>();
+        private List<FuzzyRule> rules = new List<FuzzyRule>();
 
         public void AddRule(FuzzyTerm antecedent, FuzzyTerm consequence)
         {

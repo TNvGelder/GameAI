@@ -77,6 +77,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DestinationTravelService.cs" />
     <Compile Include="Assets\Scripts\Entities\GasStation.cs" />
     <Compile Include="Assets\Scripts\Goals\CatchRobberGoal.cs" />
     <Compile Include="Assets\Scripts\Goals\PatrolGoal.cs" />

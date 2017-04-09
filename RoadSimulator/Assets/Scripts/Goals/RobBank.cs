@@ -10,6 +10,7 @@ namespace Assets.Scripts.Goals
     {
         private FollowPathBehaviour followPath;
         private Vector2D Target;
+        private GameObject targetObj;
 
         public RobBank(MovingEntity owner) {
             Owner = owner;
@@ -18,8 +19,8 @@ namespace Assets.Scripts.Goals
 
         public override void Activate()
         {
-            AddSubgoal(GoTo("Bank", "Rob the bank"));
-            AddSubgoal(GoTo("Home", "Go Home"));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Bank", "Rob the bank", out targetObj));
+            AddSubgoal(DestinationTravelService.GoTo(Owner, "Home", "Go Home"));
 
             base.Activate();
         }
@@ -31,17 +32,9 @@ namespace Assets.Scripts.Goals
             {
                 if (goTo.Name == "Rob the bank")
                 {
-                    World.Instance.GetEntity<Bank>().GetRobbed(Owner);
+                    World.Instance.GetEntity<Bank>(targetObj).GetRobbed(Owner);
                 }
             }
-        }
-
-        public Goal GoTo(string tag, string text)
-        {
-            var obj = GameObject.FindGameObjectsWithTag(tag)[0];
-            var target = new Vector2D(obj.transform.position.x, obj.transform.position.y);
-
-            return new MoveToPositionGoal(Owner, target, text);
         }
 
         public override Status Process()
