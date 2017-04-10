@@ -273,7 +273,6 @@ public class World : MonoBehaviour {
         }
     }
 
-    private bool drawn = false;
     public void RenderGraph()
     {
         if (Graph == null) return;

@@ -8,7 +8,6 @@ namespace Assets.Scripts.Goals
 {
     public class RobBank : GoalComposite
     {
-        private FollowPathBehaviour followPath;
         private GameObject targetObj;
 
         public RobBank(MovingEntity owner, Bank bank) {

@@ -5,8 +5,6 @@ namespace Assets.Scripts.Goals
 {
     public class PatrolGoal : GoalComposite
     {
-        private FollowPathBehaviour followPath;
-
         public PatrolGoal(MovingEntity owner) {
             Owner = owner;
             Name = "Patrol";
